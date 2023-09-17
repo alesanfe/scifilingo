@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Historial de Traducciones{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <h2 class="mb-4">Historial de Traducciones</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Texto Original</th>
+                    <th scope="col">Idioma de Destino</th>
+                    <th scope="col">Texto Traducido</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for translation in translations %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ translation.original_text }}</td>
+                    <td>{{ translation.target_language }}</td>
+                    <td>
+                        <!-- Enlace a la página de detalles con el ID de traducción como parámetro -->
+                        <a href="{% url 'details' translation.id %}" class="btn btn-sm btn-primary">Detalles</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{% url 'home' %}" class="btn btn-primary">Volver al Inicio</a>
+    </div>
+</div>
+{% endblock %}
+

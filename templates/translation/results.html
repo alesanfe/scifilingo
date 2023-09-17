@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Resultados de Traducción{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h2 class="mb-4">Resultados de Traducción</h2>
+        <div class="alert alert-success">
+            <strong>Texto Traducido:</strong>
+            <p>{{ translated_text }}</p>
+        </div>
+        <a href="{% url 'home' %}" class="btn btn-primary">Volver al Inicio</a>
+    </div>
+</div>
+{% endblock %}

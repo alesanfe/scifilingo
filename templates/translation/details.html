@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Detalles de Traducción{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h2 class="mb-4">Detalles de Traducción</h2>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Texto Original:</h5>
+                <p class="card-text">{{ translation.original_text }}</p>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5 class="card-title">Idioma de Destino:</h5>
+                <p class="card-text">{{ translation.target_language }}</p>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5 class="card-title">Texto Traducido:</h5>
+                <p class="card-text">{{ translation.translated_text }}</p>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5 class="card-title">Fecha de Traducción:</h5>
+                <p class="card-text">{{ translation.translation_date }}</p>
+            </div>
+        </div>
+        <a href="{% url 'history' %}" class="btn btn-primary mt-3">Volver al Historial</a>
+    </div>
+</div>
+{% endblock %}

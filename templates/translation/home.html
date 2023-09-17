@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Traductor de Idiomas Ficticios{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h2 class="mb-4">Traductor de Idiomas Ficticios</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="text_to_translate">Texto en Inglés:</label>
+                <textarea class="form-control" id="text_to_translate" name="text_to_translate" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="target_language">Idioma de Destino:</label>
+                <select class="form-control" id="target_language" name="target_language" required>
+                    {% for language in languages %}
+                        <option value="{{ language }}">{{ language|upper }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Traducir</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
