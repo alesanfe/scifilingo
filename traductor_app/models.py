@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 
 class Translation(models.Model):
@@ -9,8 +9,8 @@ class Translation(models.Model):
     target_language = models.CharField(max_length=50)
     translation_date = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f'Translation #{self.id} by {self.user.username}'
-
     class Meta:
-        ordering = ['-translation_date']
+        ordering = ["-translation_date"]
+
+    def __str__(self):
+        return f"Translation #{self.id} by {self.user.username}"

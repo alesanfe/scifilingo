@@ -44,3 +44,7 @@ htmlcov/
 .coverage.*
 coverage.xml
 *.cover
+
+# Testing
+.pytest_cache/
+.ruff_cache/

@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-from typing import Optional
 
 import requests
 from django.conf import settings
@@ -12,7 +11,7 @@ class TranslationError(Exception):
 class RateLimitError(TranslationError):
     """Raised when the funtranslations API rate limit is exceeded."""
 
-    def __init__(self, message: str, retry_after: Optional[int] = None):
+    def __init__(self, message: str, retry_after: int | None = None):
         super().__init__(message)
         self.retry_after = retry_after
 
@@ -25,8 +24,9 @@ class APIFunTranslation:
     Paid plans: pass an API key via the FUNTRANSLATIONS_API_KEY env var
     to raise the limit (1,000-12,500 calls/day).
     """
-    endpoint: str = 'https://api.funtranslations.com/translate/'
-    api_key: str = field(default_factory=lambda: getattr(settings, 'FUNTRANSLATIONS_API_KEY', ''))
+
+    endpoint: str = "https://api.funtranslations.com/translate/"
+    api_key: str = field(default_factory=lambda: getattr(settings, "FUNTRANSLATIONS_API_KEY", ""))
     timeout: float = 10.0
 
     def _build_headers(self) -> dict:
@@ -66,7 +66,7 @@ class APIFunTranslation:
 
         # Rate limited
         if response.status_code == 429:
-            retry_after = response.headers.get('Retry-After')
+            retry_after = response.headers.get("Retry-After")
             retry_seconds = int(retry_after) if retry_after and retry_after.isdigit() else None
             raise RateLimitError(
                 "Rate limit exceeded. The free tier allows 5 calls/hour and 60/day.",
@@ -74,9 +74,7 @@ class APIFunTranslation:
             )
 
         if not response.ok:
-            raise TranslationError(
-                f"Translation API returned status {response.status_code}."
-            )
+            raise TranslationError(f"Translation API returned status {response.status_code}.")
 
         try:
             return response.json()["contents"]["translated"]
