@@ -42,6 +42,9 @@ CSRF_TRUSTED_ORIGINS = env.list(
     "CSRF_TRUSTED_ORIGINS",
     default=["http://localhost:8000", "http://127.0.0.1:8000"],
 )
+# Add Render HTTPS origin automatically when deployed
+if RENDER_EXTERNAL_HOSTNAME:
+    CSRF_TRUSTED_ORIGINS.append(f"https://{RENDER_EXTERNAL_HOSTNAME}")
 
 # URL to redirect to when login is required
 LOGIN_URL = "login"
