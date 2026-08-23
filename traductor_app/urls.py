@@ -1,3 +1,5 @@
+"""URL patterns for the translation app."""
+
 from django.urls import path
 
 from traductor_app.views import (

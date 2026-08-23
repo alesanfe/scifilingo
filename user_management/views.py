@@ -1,21 +1,28 @@
+"""Views for user management: login, logout, signin, profile, password, language."""
+
+from typing import cast
+
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, UserCreationForm
+from django.contrib.auth.models import User
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import activate
+from django.utils.translation import gettext as _
 
 from traductor_app.models import Translation
 
 
 def login_view(request: HttpRequest) -> HttpResponse:
+    """Handle user login via username/password authentication."""
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
             return redirect("home")
-        messages.error(request, "Invalid username or password.")
+        messages.error(request, _("Invalid username or password."))
     else:
         form = AuthenticationForm()
     return render(request, "registration/login.html", {"form": form})
@@ -23,6 +30,7 @@ def login_view(request: HttpRequest) -> HttpResponse:
 
 @login_required
 def logout_view(request: HttpRequest) -> HttpResponse:
+    """Handle user logout with a confirmation page."""
     if request.method == "POST":
         logout(request)
         return redirect("home")
@@ -30,13 +38,14 @@ def logout_view(request: HttpRequest) -> HttpResponse:
 
 
 def signin_view(request: HttpRequest) -> HttpResponse:
+    """Handle new user registration (sign up)."""
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form: UserCreationForm = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect("home")
-        messages.error(request, "Please correct the errors below.")
+        messages.error(request, _("Please correct the errors below."))
     else:
         form = UserCreationForm()
     return render(request, "registration/signin.html", {"form": form})
@@ -45,7 +54,7 @@ def signin_view(request: HttpRequest) -> HttpResponse:
 @login_required
 def profile_view(request: HttpRequest) -> HttpResponse:
     """Show user profile with translation statistics."""
-    user_translations = Translation.objects.filter(user=request.user)
+    user_translations = Translation.objects.filter(user=cast(User, request.user))
     total = user_translations.count()
 
     # Favorite language (most used)
@@ -78,18 +87,18 @@ def profile_view(request: HttpRequest) -> HttpResponse:
 def change_password_view(request: HttpRequest) -> HttpResponse:
     """Allow users to change their password."""
     if request.method == "POST":
-        form = PasswordChangeForm(user=request.user, data=request.POST)
+        form = PasswordChangeForm(user=cast(User, request.user), data=request.POST)
         if form.is_valid():
             form.save()
             # Keep the user logged in after password change
             from django.contrib.auth import update_session_auth_hash
 
-            update_session_auth_hash(request, request.user)
-            messages.success(request, "Your password has been changed successfully.")
+            update_session_auth_hash(request, cast(User, request.user))
+            messages.success(request, _("Your password has been changed successfully."))
             return redirect("profile")
-        messages.error(request, "Please correct the errors below.")
+        messages.error(request, _("Please correct the errors below."))
     else:
-        form = PasswordChangeForm(user=request.user)
+        form = PasswordChangeForm(user=cast(User, request.user))
     return render(request, "registration/change_password.html", {"form": form})
 
 

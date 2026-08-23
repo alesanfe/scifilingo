@@ -29,7 +29,7 @@ SECRET_KEY = env("SECRET_KEY", default="django-insecure-development-only-key-cha
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG", default="RENDER" not in os.environ)
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1", "0.0.0.0"])
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1", "0.0.0.0"])  # nosec B104
 
 RENDER_EXTERNAL_HOSTNAME = env("RENDER_EXTERNAL_HOSTNAME", default="")
 if RENDER_EXTERNAL_HOSTNAME:

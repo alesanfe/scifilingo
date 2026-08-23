@@ -1,35 +1,35 @@
 {% load static i18n %}
-
 <!DOCTYPE html>
 <html lang="en" class="h-full">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}SciFiLingo{% endblock %}</title>
-
-    <!-- SEO -->
-    <meta name="description" content="Translate English text into 55+ fictional languages from Star Wars, Tolkien, Game of Thrones, Star Trek, Elder Scrolls, D&D and more. Free and fun.">
-    <meta name="keywords" content="fictional language translator, conlang, Yoda translator, Klingon, Elvish, Dothraki, Valyrian, Sindarin, Quenya, fun translations">
-    <meta name="author" content="SciFiLingo">
-
-    <!-- Open Graph -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="SciFiLingo — Fictional Language Translator">
-    <meta property="og:description" content="Translate English into 55+ fictional languages from your favorite universes: Star Wars, Tolkien, Game of Thrones, and more.">
-    <meta property="og:site_name" content="SciFiLingo">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="SciFiLingo — Fictional Language Translator">
-    <meta name="twitter:description" content="Translate English into 55+ fictional languages from your favorite universes.">
-
-    <!-- Favicon (inline SVG: cyan speech bubble) -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230b0e17'/><text x='50' y='68' font-size='60' text-anchor='middle' fill='%2300d9ff' font-family='monospace' font-weight='bold'>S</text></svg>">
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}SciFiLingo{% endblock %}</title>
+        <!-- SEO -->
+        <meta name="description"
+              content="Translate English text into 55+ fictional languages from Star Wars, Tolkien, Game of Thrones, Star Trek, Elder Scrolls, D&D and more. Free and fun.">
+        <meta name="keywords"
+              content="fictional language translator, conlang, Yoda translator, Klingon, Elvish, Dothraki, Valyrian, Sindarin, Quenya, fun translations">
+        <meta name="author" content="SciFiLingo">
+        <!-- Open Graph -->
+        <meta property="og:type" content="website">
+        <meta property="og:title"
+              content="SciFiLingo — Fictional Language Translator">
+        <meta property="og:description"
+              content="Translate English into 55+ fictional languages from your favorite universes: Star Wars, Tolkien, Game of Thrones, and more.">
+        <meta property="og:site_name" content="SciFiLingo">
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title"
+              content="SciFiLingo — Fictional Language Translator">
+        <meta name="twitter:description"
+              content="Translate English into 55+ fictional languages from your favorite universes.">
+        <!-- Favicon (inline SVG: cyan speech bubble) -->
+        <link rel="icon"
+              href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230b0e17'/><text x='50' y='68' font-size='60' text-anchor='middle' fill='%2300d9ff' font-family='monospace' font-weight='bold'>S</text></svg>">
+        <!-- Tailwind CSS -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
         tailwind.config = {
             theme: {
                 extend: {
@@ -70,106 +70,104 @@
                 }
             }
         }
-    </script>
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-    <!-- HTMX -->
-    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
-
-    <!-- Custom minimal styles -->
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-</head>
-
-<body class="h-full bg-scifi-bg text-gray-200 font-sans antialiased flex flex-col min-h-screen"
-      style="background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,217,255,0.12), transparent), radial-gradient(ellipse 60% 50% at 80% 100%, rgba(168,85,247,0.10), transparent); background-attachment: fixed;">
-
-    <!-- Navbar -->
-    <nav class="bg-scifi-surface/80 backdrop-blur-md border-b border-scifi-border sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6">
-            <div class="flex items-center justify-between h-16">
-                <!-- Logo -->
-                <a href="{% url 'home' %}" class="flex items-center gap-2 group">
-                    <img src="{% static 'img/logo.png' %}" alt="Logo" class="w-8 h-8 transition-transform group-hover:rotate-[-5deg]">
-                    <span class="text-xl font-bold tracking-tight text-white group-hover:text-scifi-accent transition-colors">
-                        SciFiLingo
-                    </span>
-                </a>
-
-                <!-- Nav links -->
-                <div class="flex items-center gap-1 sm:gap-2">
-                    <a href="{% url 'home' %}" class="px-3 py-2 text-sm font-medium text-gray-400 hover:text-scifi-accent rounded-lg hover:bg-white/5 transition-all">
-                        {% trans "Translate" %}
+        </script>
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+              rel="stylesheet">
+        <!-- HTMX -->
+        <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+        <!-- Custom minimal styles -->
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    </head>
+    <body class="h-full bg-scifi-bg text-gray-200 font-sans antialiased flex flex-col min-h-screen"
+          style="background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,217,255,0.12), transparent), radial-gradient(ellipse 60% 50% at 80% 100%, rgba(168,85,247,0.10), transparent);
+                 background-attachment: fixed">
+        <!-- Navbar -->
+        <nav class="bg-scifi-surface/80 backdrop-blur-md border-b border-scifi-border sticky top-0 z-50">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6">
+                <div class="flex items-center justify-between h-16">
+                    <!-- Logo -->
+                    <a href="{% url 'home' %}" class="flex items-center gap-2 group">
+                        <img src="{% static 'img/logo.png' %}"
+                             alt="Logo"
+                             class="w-8 h-8 transition-transform group-hover:rotate-[-5deg]">
+                        <span class="text-xl font-bold tracking-tight text-white group-hover:text-scifi-accent transition-colors">
+                            SciFiLingo
+                        </span>
                     </a>
-                    {% if user.is_authenticated %}
-                    <a href="{% url 'history' %}" class="px-3 py-2 text-sm font-medium text-gray-400 hover:text-scifi-accent rounded-lg hover:bg-white/5 transition-all">
-                        {% trans "History" %}
-                    </a>
-                    <a href="{% url 'profile' %}" class="px-3 py-2 text-sm font-medium text-gray-400 hover:text-scifi-accent rounded-lg hover:bg-white/5 transition-all">
-                        {% trans "Profile" %}
-                    </a>
-                    <a href="{% url 'logout' %}" class="px-3 py-2 text-sm font-medium text-gray-400 hover:text-red-400 rounded-lg hover:bg-white/5 transition-all">
-                        {% trans "Logout" %}
-                    </a>
-                    {% else %}
-                    <a href="{% url 'signin' %}" class="px-3 py-2 text-sm font-medium text-gray-400 hover:text-scifi-accent rounded-lg hover:bg-white/5 transition-all">
-                        {% trans "Sign Up" %}
-                    </a>
-                    <a href="{% url 'login' %}" class="px-4 py-2 text-sm font-semibold text-scifi-bg bg-scifi-accent hover:bg-scifi-accent/90 rounded-lg transition-all shadow-lg shadow-scifi-accent/20">
-                        {% trans "Login" %}
-                    </a>
-                    {% endif %}
-                    <!-- Language selector -->
-                    <div class="flex items-center gap-0.5 ml-1 pl-2 border-l border-scifi-border">
-                        {% get_current_language as LANGUAGE_CODE %}
-                        <a href="{% url 'set_language' 'en' %}"
-                           class="px-2 py-1 text-xs font-semibold rounded {% if LANGUAGE_CODE == 'en' %}text-scifi-accent bg-scifi-accent/10{% else %}text-gray-500 hover:text-gray-300{% endif %} transition-all">
-                            EN
+                    <!-- Nav links -->
+                    <div class="flex items-center gap-1 sm:gap-2">
+                        <a href="{% url 'home' %}"
+                           class="px-3 py-2 text-sm font-medium text-gray-400 hover:text-scifi-accent rounded-lg hover:bg-white/5 transition-all">
+                            {% trans "Translate" %}
                         </a>
-                        <a href="{% url 'set_language' 'es' %}"
-                           class="px-2 py-1 text-xs font-semibold rounded {% if LANGUAGE_CODE == 'es' %}text-scifi-accent bg-scifi-accent/10{% else %}text-gray-500 hover:text-gray-300{% endif %} transition-all">
-                            ES
-                        </a>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'history' %}"
+                               class="px-3 py-2 text-sm font-medium text-gray-400 hover:text-scifi-accent rounded-lg hover:bg-white/5 transition-all">
+                                {% trans "History" %}
+                            </a>
+                            <a href="{% url 'profile' %}"
+                               class="px-3 py-2 text-sm font-medium text-gray-400 hover:text-scifi-accent rounded-lg hover:bg-white/5 transition-all">
+                                {% trans "Profile" %}
+                            </a>
+                            <a href="{% url 'logout' %}"
+                               class="px-3 py-2 text-sm font-medium text-gray-400 hover:text-red-400 rounded-lg hover:bg-white/5 transition-all">
+                                {% trans "Logout" %}
+                            </a>
+                        {% else %}
+                            <a href="{% url 'signin' %}"
+                               class="px-3 py-2 text-sm font-medium text-gray-400 hover:text-scifi-accent rounded-lg hover:bg-white/5 transition-all">
+                                {% trans "Sign Up" %}
+                            </a>
+                            <a href="{% url 'login' %}"
+                               class="px-4 py-2 text-sm font-semibold text-scifi-bg bg-scifi-accent hover:bg-scifi-accent/90 rounded-lg transition-all shadow-lg shadow-scifi-accent/20">
+                                {% trans "Login" %}
+                            </a>
+                        {% endif %}
+                        <!-- Language selector -->
+                        <div class="flex items-center gap-0.5 ml-1 pl-2 border-l border-scifi-border">
+                            {% get_current_language as LANGUAGE_CODE %}
+                            <a href="{% url 'set_language' 'en' %}"
+                               class="px-2 py-1 text-xs font-semibold rounded {% if LANGUAGE_CODE == 'en' %}text-scifi-accent bg-scifi-accent/10{% else %}text-gray-500 hover:text-gray-300{% endif %} transition-all">
+                                EN
+                            </a>
+                            <a href="{% url 'set_language' 'es' %}"
+                               class="px-2 py-1 text-xs font-semibold rounded {% if LANGUAGE_CODE == 'es' %}text-scifi-accent bg-scifi-accent/10{% else %}text-gray-500 hover:text-gray-300{% endif %} transition-all">
+                                ES
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </nav>
-
-    <!-- Main content -->
-    <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8">
-        {% if messages %}
-        <div class="space-y-2 mb-6">
-            {% for message in messages %}
-            <div class="flex items-center gap-3 px-4 py-3 rounded-xl border
-                {% if message.tags == 'error' %}bg-red-500/10 border-red-500/30 text-red-300
-                {% elif message.tags == 'success' %}bg-scifi-accent/10 border-scifi-accent/30 text-scifi-accent
-                {% elif message.tags == 'warning' %}bg-yellow-500/10 border-yellow-500/30 text-yellow-300
-                {% else %}bg-scifi-purple/10 border-scifi-purple/30 text-purple-300{% endif %}">
-                <span class="flex-1 text-sm">{{ message }}</span>
-                <button onclick="this.parentElement.remove()" class="text-current opacity-60 hover:opacity-100 transition-opacity">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
+        </nav>
+        <!-- Main content -->
+        <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8">
+            {% if messages %}
+                <div class="space-y-2 mb-6">
+                    {% for message in messages %}
+                        <div class="flex items-center gap-3 px-4 py-3 rounded-xl border {% if message.tags == 'error' %}bg-red-500/10 border-red-500/30 text-red-300 {% elif message.tags == 'success' %}bg-scifi-accent/10 border-scifi-accent/30 text-scifi-accent {% elif message.tags == 'warning' %}bg-yellow-500/10 border-yellow-500/30 text-yellow-300 {% else %}bg-scifi-purple/10 border-scifi-purple/30 text-purple-300{% endif %}">
+                            <span class="flex-1 text-sm">{{ message }}</span>
+                            <button onclick="this.parentElement.remove()"
+                                    class="text-current opacity-60 hover:opacity-100 transition-opacity">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </main>
+        <!-- Footer -->
+        <footer class="border-t border-scifi-border bg-scifi-surface/50 mt-auto">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+                <p class="text-center text-sm text-gray-500">
+                    &copy; {% now "Y" %} SciFiLingo &mdash; Translate to fictional languages
+                </p>
             </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-
-        {% block content %}
-        {% endblock %}
-    </main>
-
-    <!-- Footer -->
-    <footer class="border-t border-scifi-border bg-scifi-surface/50 mt-auto">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4">
-            <p class="text-center text-sm text-gray-500">
-                &copy; {% now "Y" %} SciFiLingo &mdash; Translate to fictional languages
-            </p>
-        </div>
-    </footer>
-</body>
-
+        </footer>
+    </body>
 </html>

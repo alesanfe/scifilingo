@@ -1,34 +1,39 @@
 {% load i18n %}
 <div id="translation-form-wrapper">
-    <form hx-post="{% url 'home' %}" hx-target="#translation-form-wrapper" hx-swap="outerHTML"
-          hx-indicator="#submit-spinner" class="space-y-5">
+    <form hx-post="{% url 'home' %}"
+          hx-target="#translation-form-wrapper"
+          hx-swap="outerHTML"
+          hx-indicator="#submit-spinner"
+          class="space-y-5">
         {% csrf_token %}
         <div>
-            <label for="{{ form.text_to_translate.id_for_label }}" class="block text-sm font-medium text-gray-400 mb-1.5">
-                {% trans "Text to translate" %}
-            </label>
+            <label for="{{ form.text_to_translate.id_for_label }}"
+                   class="block text-sm font-medium text-gray-400 mb-1.5">{% trans "Text to translate" %}</label>
             {{ form.text_to_translate }}
             <div class="flex justify-between items-center mt-1.5">
                 {% if form.text_to_translate.errors %}
-                <p class="text-sm text-red-400">{{ form.text_to_translate.errors|join:", " }}</p>
+                    <p class="text-sm text-red-400">{{ form.text_to_translate.errors|join:", " }}</p>
                 {% else %}
-                <span></span>
+                    <span></span>
                 {% endif %}
                 <span id="char-counter" class="text-xs text-gray-600">0 / 1000</span>
             </div>
         </div>
         <div>
-            <label for="{{ form.target_language.id_for_label }}" class="block text-sm font-medium text-gray-400 mb-1.5">
-                {% trans "Target language" %}
-            </label>
+            <label for="{{ form.target_language.id_for_label }}"
+                   class="block text-sm font-medium text-gray-400 mb-1.5">{% trans "Target language" %}</label>
             {{ form.target_language }}
             {% if form.target_language.errors %}
-            <p class="mt-1.5 text-sm text-red-400">{{ form.target_language.errors|join:", " }}</p>
+                <p class="mt-1.5 text-sm text-red-400">{{ form.target_language.errors|join:", " }}</p>
             {% endif %}
         </div>
         <button type="submit"
                 class="w-full py-3 px-4 bg-scifi-accent text-scifi-bg font-semibold rounded-xl hover:bg-scifi-accent/90 focus:outline-none focus:ring-2 focus:ring-scifi-accent/40 transition-all shadow-lg shadow-scifi-accent/20 flex items-center justify-center gap-2">
-            <svg id="submit-spinner" class="htmx-indicator animate-spin h-5 w-5 text-scifi-bg" fill="none" viewBox="0 0 24 24" style="display:none;">
+            <svg id="submit-spinner"
+                 class="htmx-indicator animate-spin h-5 w-5 text-scifi-bg"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 style="display:none">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
             </svg>

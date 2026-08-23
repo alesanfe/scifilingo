@@ -1,27 +1,25 @@
 {% extends "base.html" %}
 {% load i18n %}
-
 {% block title %}{% trans "Result" %} &middot; SciFiLingo{% endblock %}
-
 {% block content %}
-<div class="flex justify-center">
-    <div class="w-full max-w-2xl">
-        <div class="bg-scifi-surface border border-scifi-accent/30 rounded-xl p-6 shadow-lg shadow-scifi-accent/10 animate-slide-up">
-            <div class="flex items-center justify-between mb-3">
-                <span class="text-sm font-semibold text-scifi-accent uppercase tracking-wide">
-                    {{ language_label }}
-                </span>
-            </div>
-            <p class="text-lg text-white leading-relaxed mb-4">{{ translated_text }}</p>
-            <div class="flex gap-2">
-                <a href="{% url 'home' %}" class="px-4 py-2 text-sm font-medium bg-scifi-accent text-scifi-bg rounded-lg hover:bg-scifi-accent/90 transition-all">
-                    {% trans "Translate Another" %}
-                </a>
-                <a href="{% url 'history' %}" class="px-4 py-2 text-sm font-medium bg-scifi-surface border border-scifi-border text-gray-300 rounded-lg hover:bg-scifi-border transition-all">
-                    {% trans "View History" %}
-                </a>
+    <div class="flex justify-center">
+        <div class="w-full max-w-2xl">
+            <div class="bg-scifi-surface border border-scifi-accent/30 rounded-xl p-6 shadow-lg shadow-scifi-accent/10 animate-slide-up">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-sm font-semibold text-scifi-accent uppercase tracking-wide">{{ language_label }}</span>
+                </div>
+                <p class="text-lg text-white leading-relaxed mb-4">{{ translated_text }}</p>
+                <div class="flex gap-2">
+                    <a href="{% url 'home' %}"
+                       class="px-4 py-2 text-sm font-medium bg-scifi-accent text-scifi-bg rounded-lg hover:bg-scifi-accent/90 transition-all">
+                        {% trans "Translate Another" %}
+                    </a>
+                    <a href="{% url 'history' %}"
+                       class="px-4 py-2 text-sm font-medium bg-scifi-surface border border-scifi-border text-gray-300 rounded-lg hover:bg-scifi-border transition-all">
+                        {% trans "View History" %}
+                    </a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

@@ -13,3 +13,21 @@ quote-style = "double"
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "translator_project.settings"
 python_files = ["test_*.py", "tests.py"]
+
+[tool.interrogate]
+fail-under = 80.0
+ignore-init-method = true
+ignore-init-module = true
+ignore-magic = true
+ignore-private = true
+ignore-property-decorators = true
+ignore-semiprivate = true
+ignore-regex = ["^test_", "^Test", "^setUp$", "^tearDown$", "^setUpTestData$"]
+exclude = [
+    "traductor_app/tests",
+    "user_management/tests",
+    "traductor_app/migrations",
+    "user_management/migrations",
+    "conftest.py",
+    "manage.py",
+]

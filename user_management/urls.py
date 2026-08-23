@@ -1,3 +1,5 @@
+"""URL patterns for the user management app (auth, profile, language)."""
+
 from django.urls import path
 
 from user_management.views import (

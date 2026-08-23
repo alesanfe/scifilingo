@@ -2,26 +2,24 @@
 <div id="translation-result" class="mt-6 animate-slide-up">
     <div class="bg-scifi-surface border border-scifi-accent/30 rounded-xl p-5 shadow-lg shadow-scifi-accent/10">
         <div class="flex items-center justify-between mb-3">
-            <span class="text-sm font-semibold text-scifi-accent uppercase tracking-wide">
-                {{ language_label }}
-            </span>
-            <span class="text-xs text-gray-600 truncate max-w-[200px]">
-                "{{ original_text|truncatewords:5 }}"
-            </span>
+            <span class="text-sm font-semibold text-scifi-accent uppercase tracking-wide">{{ language_label }}</span>
+            <span class="text-xs text-gray-600 truncate max-w-[200px]">"{{ original_text|truncatewords:5 }}"</span>
         </div>
         <p id="translated-text" class="text-lg text-white leading-relaxed mb-4">{{ translated_text }}</p>
         <div class="flex flex-wrap gap-2">
             <button onclick="copyToClipboard(this, '{{ translated_text|escapejs }}')"
                     class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-scifi-surface border border-scifi-border text-gray-300 rounded-lg hover:bg-scifi-border transition-all">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
                 <span class="copy-label">{% trans "Copy" %}</span>
             </button>
-            <a href="{% url 'home' %}" class="px-4 py-2 text-sm font-medium bg-scifi-accent text-scifi-bg rounded-lg hover:bg-scifi-accent/90 transition-all">
+            <a href="{% url 'home' %}"
+               class="px-4 py-2 text-sm font-medium bg-scifi-accent text-scifi-bg rounded-lg hover:bg-scifi-accent/90 transition-all">
                 {% trans "Translate Another" %}
             </a>
-            <a href="{% url 'history' %}" class="px-4 py-2 text-sm font-medium bg-scifi-surface border border-scifi-border text-gray-300 rounded-lg hover:bg-scifi-border transition-all">
+            <a href="{% url 'history' %}"
+               class="px-4 py-2 text-sm font-medium bg-scifi-surface border border-scifi-border text-gray-300 rounded-lg hover:bg-scifi-border transition-all">
                 {% trans "View History" %}
             </a>
         </div>

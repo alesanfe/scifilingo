@@ -1,116 +1,119 @@
 {% extends "base.html" %}
 {% load i18n %}
-
 {% block title %}{% trans "Sign Up" %} &middot; SciFiLingo{% endblock %}
-
 {% block content %}
-<div class="flex justify-center pt-8">
-    <div class="w-full max-w-md">
-        <div class="bg-scifi-card border border-scifi-border rounded-2xl shadow-2xl shadow-black/40 p-8 animate-slide-up">
-            <!-- Header -->
-            <div class="text-center mb-8">
-                <h1 class="text-2xl font-bold text-white">{% trans "Create account" %}</h1>
-                <p class="text-sm text-gray-500 mt-1">{% trans "Start translating to fictional languages" %}</p>
-            </div>
-
-            <form method="post" id="signup-form" class="space-y-5" novalidate>
-                {% csrf_token %}
-
-                <!-- Username -->
-                <div>
-                    <label for="id_username" class="block text-sm font-medium text-gray-400 mb-1.5">
-                        Username
-                    </label>
-                    <div class="relative">
-                        <input type="text" name="username" id="id_username" value="{{ form.username.value|default:'' }}"
-                               autocomplete="off"
-                               class="w-full px-4 py-3 pr-11 bg-scifi-surface border border-scifi-border rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-scifi-accent/20 transition-all"
-                               placeholder="Choose a username">
-                        <div id="username-icon" class="absolute right-3 top-1/2 -translate-y-1/2 hidden"></div>
-                    </div>
-                    <p id="username-error" class="mt-1.5 text-sm text-red-400 hidden"></p>
-                    <p id="username-hint" class="mt-1.5 text-xs text-gray-600">150 characters or fewer. Letters, digits and @/./+/-/_ only.</p>
+    <div class="flex justify-center pt-8">
+        <div class="w-full max-w-md">
+            <div class="bg-scifi-card border border-scifi-border rounded-2xl shadow-2xl shadow-black/40 p-8 animate-slide-up">
+                <!-- Header -->
+                <div class="text-center mb-8">
+                    <h1 class="text-2xl font-bold text-white">{% trans "Create account" %}</h1>
+                    <p class="text-sm text-gray-500 mt-1">{% trans "Start translating to fictional languages" %}</p>
                 </div>
-
-                <!-- Password 1 -->
-                <div>
-                    <label for="id_password1" class="block text-sm font-medium text-gray-400 mb-1.5">
-                        Password
-                    </label>
-                    <div class="relative">
-                        <input type="password" name="password1" id="id_password1"
-                               autocomplete="new-password"
-                               class="w-full px-4 py-3 pr-11 bg-scifi-surface border border-scifi-border rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-scifi-accent/20 transition-all"
-                               placeholder="Create a password">
-                        <button type="button" onclick="togglePassword('id_password1', this)"
-                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors">
-                            <svg class="w-5 h-5 eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                <form method="post" id="signup-form" class="space-y-5" novalidate>
+                    {% csrf_token %}
+                    <!-- Username -->
+                    <div>
+                        <label for="id_username"
+                               class="block text-sm font-medium text-gray-400 mb-1.5">Username</label>
+                        <div class="relative">
+                            <input type="text"
+                                   name="username"
+                                   id="id_username"
+                                   value="{{ form.username.value|default:'' }}"
+                                   autocomplete="off"
+                                   class="w-full px-4 py-3 pr-11 bg-scifi-surface border border-scifi-border rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-scifi-accent/20 transition-all"
+                                   placeholder="Choose a username">
+                            <div id="username-icon"
+                                 class="absolute right-3 top-1/2 -translate-y-1/2 hidden"></div>
+                        </div>
+                        <p id="username-error" class="mt-1.5 text-sm text-red-400 hidden"></p>
+                        <p id="username-hint" class="mt-1.5 text-xs text-gray-600">150 characters or fewer. Letters, digits and @/./+/-/_ only.</p>
+                    </div>
+                    <!-- Password 1 -->
+                    <div>
+                        <label for="id_password1"
+                               class="block text-sm font-medium text-gray-400 mb-1.5">Password</label>
+                        <div class="relative">
+                            <input type="password"
+                                   name="password1"
+                                   id="id_password1"
+                                   autocomplete="new-password"
+                                   class="w-full px-4 py-3 pr-11 bg-scifi-surface border border-scifi-border rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-scifi-accent/20 transition-all"
+                                   placeholder="Create a password">
+                            <button type="button"
+                                    onclick="togglePassword('id_password1', this)"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors">
+                                <svg class="w-5 h-5 eye-icon"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                        </div>
+                        <!-- Password strength meter -->
+                        <div class="mt-2 flex gap-1.5" id="strength-bars">
+                            <div class="h-1 flex-1 rounded-full bg-scifi-border transition-all duration-300"></div>
+                            <div class="h-1 flex-1 rounded-full bg-scifi-border transition-all duration-300"></div>
+                            <div class="h-1 flex-1 rounded-full bg-scifi-border transition-all duration-300"></div>
+                            <div class="h-1 flex-1 rounded-full bg-scifi-border transition-all duration-300"></div>
+                        </div>
+                        <p id="strength-label" class="mt-1 text-xs text-gray-600">Password strength</p>
+                        <p id="password1-error" class="mt-1.5 text-sm text-red-400 hidden"></p>
+                    </div>
+                    <!-- Password 2 -->
+                    <div>
+                        <label for="id_password2"
+                               class="block text-sm font-medium text-gray-400 mb-1.5">Confirm Password</label>
+                        <div class="relative">
+                            <input type="password"
+                                   name="password2"
+                                   id="id_password2"
+                                   autocomplete="new-password"
+                                   class="w-full px-4 py-3 pr-11 bg-scifi-surface border border-scifi-border rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-scifi-accent/20 transition-all"
+                                   placeholder="Repeat your password">
+                            <div id="password2-icon"
+                                 class="absolute right-3 top-1/2 -translate-y-1/2 hidden"></div>
+                        </div>
+                        <p id="password2-error" class="mt-1.5 text-sm text-red-400 hidden"></p>
+                        <p id="password2-match" class="mt-1.5 text-sm text-green-400 hidden">
+                            <svg class="w-4 h-4 inline -mt-0.5"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                             </svg>
-                        </button>
+                            Passwords match
+                        </p>
                     </div>
-                    <!-- Password strength meter -->
-                    <div class="mt-2 flex gap-1.5" id="strength-bars">
-                        <div class="h-1 flex-1 rounded-full bg-scifi-border transition-all duration-300"></div>
-                        <div class="h-1 flex-1 rounded-full bg-scifi-border transition-all duration-300"></div>
-                        <div class="h-1 flex-1 rounded-full bg-scifi-border transition-all duration-300"></div>
-                        <div class="h-1 flex-1 rounded-full bg-scifi-border transition-all duration-300"></div>
-                    </div>
-                    <p id="strength-label" class="mt-1 text-xs text-gray-600">Password strength</p>
-                    <p id="password1-error" class="mt-1.5 text-sm text-red-400 hidden"></p>
-                </div>
-
-                <!-- Password 2 -->
-                <div>
-                    <label for="id_password2" class="block text-sm font-medium text-gray-400 mb-1.5">
-                        Confirm Password
-                    </label>
-                    <div class="relative">
-                        <input type="password" name="password2" id="id_password2"
-                               autocomplete="new-password"
-                               class="w-full px-4 py-3 pr-11 bg-scifi-surface border border-scifi-border rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-scifi-accent/20 transition-all"
-                               placeholder="Repeat your password">
-                        <div id="password2-icon" class="absolute right-3 top-1/2 -translate-y-1/2 hidden"></div>
-                    </div>
-                    <p id="password2-error" class="mt-1.5 text-sm text-red-400 hidden"></p>
-                    <p id="password2-match" class="mt-1.5 text-sm text-green-400 hidden">
-                        <svg class="w-4 h-4 inline -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                        </svg>
-                        Passwords match
+                    <!-- Django server-side errors (fallback) -->
+                    {% if form.errors %}
+                        <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 space-y-1">
+                            {% for field in form %}
+                                {% if field.errors %}
+                                    <p class="text-sm text-red-400">{{ field.label }}: {{ field.errors|join:", " }}</p>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <button type="submit"
+                            id="submit-btn"
+                            class="w-full py-3 px-4 bg-scifi-accent text-scifi-bg font-semibold rounded-xl hover:bg-scifi-accent/90 focus:outline-none focus:ring-2 focus:ring-scifi-accent/40 transition-all shadow-lg shadow-scifi-accent/20 disabled:opacity-40 disabled:cursor-not-allowed"
+                            disabled>Create Account</button>
+                </form>
+                <div class="mt-6 pt-6 border-t border-scifi-border text-center">
+                    <p class="text-sm text-gray-500">
+                        {% trans "Already have an account?" %}
+                        <a href="{% url 'login' %}"
+                           class="text-scifi-accent hover:underline font-medium">{% trans "Login" %}</a>
                     </p>
                 </div>
-
-                <!-- Django server-side errors (fallback) -->
-                {% if form.errors %}
-                <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 space-y-1">
-                    {% for field in form %}
-                        {% if field.errors %}
-                        <p class="text-sm text-red-400">{{ field.label }}: {{ field.errors|join:", " }}</p>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-                {% endif %}
-
-                <button type="submit" id="submit-btn"
-                        class="w-full py-3 px-4 bg-scifi-accent text-scifi-bg font-semibold rounded-xl hover:bg-scifi-accent/90 focus:outline-none focus:ring-2 focus:ring-scifi-accent/40 transition-all shadow-lg shadow-scifi-accent/20 disabled:opacity-40 disabled:cursor-not-allowed"
-                        disabled>
-                    Create Account
-                </button>
-            </form>
-
-            <div class="mt-6 pt-6 border-t border-scifi-border text-center">
-                <p class="text-sm text-gray-500">
-                    {% trans "Already have an account?" %}
-                    <a href="{% url 'login' %}" class="text-scifi-accent hover:underline font-medium">{% trans "Login" %}</a>
-                </p>
             </div>
         </div>
     </div>
-</div>
-
-<script>
+    <script>
 (function() {
     const usernameInput = document.getElementById('id_username');
     const password1Input = document.getElementById('id_password1');
@@ -126,7 +129,7 @@
             errorEl.classList.remove('hidden');
         }
         if (iconEl) {
-            iconEl.innerHTML = '<svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+            iconEl.innerHTML = '<svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';
             iconEl.classList.remove('hidden');
         }
     }
@@ -136,7 +139,7 @@
         input.classList.add('border-green-500/50');
         if (errorEl) errorEl.classList.add('hidden');
         if (iconEl) {
-            iconEl.innerHTML = '<svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+            iconEl.innerHTML = '<svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>';
             iconEl.classList.remove('hidden');
         }
     }
@@ -309,10 +312,10 @@
         const icon = btn.querySelector('.eye-icon');
         if (input.type === 'password') {
             input.type = 'text';
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29.7m.53-3.82l-.7-3.29M3 3l3.59 3.59m0 0L9.88 9.88"/>';
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29.7m.53-3.82l-.7-3.29M3 3l3.59 3.59m0 0L9.88 9.88" />';
         } else {
             input.type = 'password';
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>';
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />';
         }
     };
 
@@ -320,5 +323,5 @@
     if (usernameInput.value) validateUsername();
     checkForm();
 })();
-</script>
+    </script>
 {% endblock %}

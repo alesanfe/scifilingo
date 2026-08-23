@@ -11,6 +11,12 @@ TAILWIND_INPUT = (
 
 
 class TranslationForm(forms.Form):
+    """Form for submitting a translation request.
+
+    Captures the text to translate and the target fictional language,
+    organized by universe groups in the language selector.
+    """
+
     text_to_translate = forms.CharField(
         widget=forms.Textarea(
             attrs={

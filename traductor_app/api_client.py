@@ -216,15 +216,16 @@ class APIFunTranslation:
         if not text or not text.strip():
             raise ValueError("Text to translate cannot be empty.")
 
-        # Map our slug to funtranslations page slug
         page_slug = LANGUAGE_SLUG_MAP.get(language, language)
-
-        # 1. GET the page to get CSRF + snapshot
         snapshot_str = self._get_page(page_slug)
+        response = self._post_translation(page_slug, text, snapshot_str)
+        self._check_response_status(response)
+        return self._parse_translation_response(response)
 
-        # 2. POST to the Livewire update endpoint
+    def _post_translation(self, page_slug: str, text: str, snapshot_str: str):
+        """POST the translation request to the Livewire endpoint."""
         session = self._get_session()
-        body = {
+        body: dict = {
             "_token": self._csrf,
             "components": [
                 {
@@ -234,9 +235,8 @@ class APIFunTranslation:
                 }
             ],
         }
-
         try:
-            response = session.post(
+            return session.post(
                 self._update_url,
                 json=body,
                 headers={
@@ -254,7 +254,8 @@ class APIFunTranslation:
         except requests.exceptions.RequestException as exc:
             raise TranslationError("Could not reach the translation service.") from exc
 
-        # Rate limited
+    def _check_response_status(self, response) -> None:
+        """Raise appropriate errors based on the HTTP response status."""
         if response.status_code == 429:
             retry_after = response.headers.get("Retry-After")
             retry_seconds = int(retry_after) if retry_after and retry_after.isdigit() else None
@@ -262,23 +263,21 @@ class APIFunTranslation:
                 "Rate limit exceeded. The free tier allows limited calls per hour.",
                 retry_after=retry_seconds,
             )
-
         if response.status_code == 403:
             raise TranslationError(
                 "The translation service blocked this request (403). This may be temporary — try again in a moment."
             )
-
         if not response.ok:
             raise TranslationError(f"Translation service returned status {response.status_code}.")
 
-        # 3. Parse the Livewire response to extract the translated text
+    def _parse_translation_response(self, response) -> str:
+        """Extract the translated text from the Livewire JSON response."""
         try:
             data = response.json()
             components = data.get("components", [])
             if not components:
                 raise TranslationError("Empty response from translation service.")
 
-            # The snapshot in the response contains the updated outputText
             snapshot_response = components[0].get("snapshot", "")
             if isinstance(snapshot_response, str):
                 snap = json.loads(snapshot_response)

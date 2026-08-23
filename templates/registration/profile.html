@@ -1,77 +1,76 @@
 {% extends "base.html" %}
 {% load i18n %}
-
 {% block title %}{% trans "Profile" %} &middot; SciFiLingo{% endblock %}
-
 {% block content %}
-<div class="max-w-3xl mx-auto">
-    <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-bold text-white">{% trans "My Profile" %}</h1>
-        <a href="{% url 'change_password' %}" class="px-4 py-2 text-sm font-medium bg-scifi-surface border border-scifi-border text-gray-300 rounded-lg hover:bg-scifi-border transition-all">
-            {% trans "Change Password" %}
-        </a>
-    </div>
-
-    <!-- User info -->
-    <div class="bg-scifi-card border border-scifi-border rounded-2xl p-6 mb-6">
-        <div class="flex items-center gap-4">
-            <div class="w-16 h-16 rounded-full bg-scifi-accent/10 border border-scifi-accent/30 flex items-center justify-center">
-                <span class="text-2xl font-bold text-scifi-accent">{{ user.username|first|upper }}</span>
-            </div>
-            <div>
-                <h2 class="text-xl font-semibold text-white">{{ user.username }}</h2>
-                <p class="text-sm text-gray-500">Member since {{ user.date_joined|date:"F Y" }}</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Stats -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-        <div class="bg-scifi-card border border-scifi-border rounded-2xl p-5">
-            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{% trans "Total Translations" %}</p>
-            <p class="text-3xl font-bold text-white">{{ total_translations }}</p>
-        </div>
-        <div class="bg-scifi-card border border-scifi-border rounded-2xl p-5">
-            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{% trans "Favorite Language" %}</p>
-            {% if favorite_language %}
-            <p class="text-2xl font-bold text-scifi-accent">{{ favorite_language.label }}</p>
-            <p class="text-xs text-gray-600 mt-1">{{ favorite_language.count }} translations</p>
-            {% else %}
-            <p class="text-lg text-gray-600">{% trans "No translations yet" %}</p>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- Recent translations -->
-    {% if recent_translations %}
-    <div class="bg-scifi-card border border-scifi-border rounded-2xl overflow-hidden">
-        <div class="px-5 py-3 border-b border-scifi-border">
-            <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">{% trans "Recent Translations" %}</h3>
-        </div>
-        <div class="divide-y divide-scifi-border">
-            {% for t in recent_translations %}
-            <a href="{% url 'details' t.id %}" class="flex items-center justify-between px-5 py-3 hover:bg-white/5 transition-colors">
-                <div class="min-w-0 flex-1">
-                    <p class="text-sm text-gray-300 truncate">{{ t.original_text|truncatewords:8 }}</p>
-                    <p class="text-xs text-gray-600">{{ t.translation_date|date:"Y-m-d H:i" }}</p>
-                </div>
-                <span class="ml-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-scifi-accent/10 text-scifi-accent border border-scifi-accent/20 flex-shrink-0">
-                    {{ t.target_language|upper }}
-                </span>
+    <div class="max-w-3xl mx-auto">
+        <div class="flex items-center justify-between mb-6">
+            <h1 class="text-2xl font-bold text-white">{% trans "My Profile" %}</h1>
+            <a href="{% url 'change_password' %}"
+               class="px-4 py-2 text-sm font-medium bg-scifi-surface border border-scifi-border text-gray-300 rounded-lg hover:bg-scifi-border transition-all">
+                {% trans "Change Password" %}
             </a>
-            {% endfor %}
         </div>
-        <div class="px-5 py-3 border-t border-scifi-border">
-            <a href="{% url 'history' %}" class="text-sm text-scifi-accent hover:underline font-medium">{% trans "View all" %} &rarr;</a>
+        <!-- User info -->
+        <div class="bg-scifi-card border border-scifi-border rounded-2xl p-6 mb-6">
+            <div class="flex items-center gap-4">
+                <div class="w-16 h-16 rounded-full bg-scifi-accent/10 border border-scifi-accent/30 flex items-center justify-center">
+                    <span class="text-2xl font-bold text-scifi-accent">{{ user.username|first|upper }}</span>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold text-white">{{ user.username }}</h2>
+                    <p class="text-sm text-gray-500">Member since {{ user.date_joined|date:"F Y" }}</p>
+                </div>
+            </div>
         </div>
+        <!-- Stats -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div class="bg-scifi-card border border-scifi-border rounded-2xl p-5">
+                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{% trans "Total Translations" %}</p>
+                <p class="text-3xl font-bold text-white">{{ total_translations }}</p>
+            </div>
+            <div class="bg-scifi-card border border-scifi-border rounded-2xl p-5">
+                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{% trans "Favorite Language" %}</p>
+                {% if favorite_language %}
+                    <p class="text-2xl font-bold text-scifi-accent">{{ favorite_language.label }}</p>
+                    <p class="text-xs text-gray-600 mt-1">{{ favorite_language.count }} translations</p>
+                {% else %}
+                    <p class="text-lg text-gray-600">{% trans "No translations yet" %}</p>
+                {% endif %}
+            </div>
+        </div>
+        <!-- Recent translations -->
+        {% if recent_translations %}
+            <div class="bg-scifi-card border border-scifi-border rounded-2xl overflow-hidden">
+                <div class="px-5 py-3 border-b border-scifi-border">
+                    <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">{% trans "Recent Translations" %}</h3>
+                </div>
+                <div class="divide-y divide-scifi-border">
+                    {% for t in recent_translations %}
+                        <a href="{% url 'details' t.id %}"
+                           class="flex items-center justify-between px-5 py-3 hover:bg-white/5 transition-colors">
+                            <div class="min-w-0 flex-1">
+                                <p class="text-sm text-gray-300 truncate">{{ t.original_text|truncatewords:8 }}</p>
+                                <p class="text-xs text-gray-600">{{ t.translation_date|date:"Y-m-d H:i" }}</p>
+                            </div>
+                            <span class="ml-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-scifi-accent/10 text-scifi-accent border border-scifi-accent/20 flex-shrink-0">
+                                {{ t.target_language|upper }}
+                            </span>
+                        </a>
+                    {% endfor %}
+                </div>
+                <div class="px-5 py-3 border-t border-scifi-border">
+                    <a href="{% url 'history' %}"
+                       class="text-sm text-scifi-accent hover:underline font-medium">{% trans "View all" %} &rarr;</a>
+                </div>
+            </div>
+        {% else %}
+            <div class="bg-scifi-card border border-scifi-border rounded-2xl p-8 text-center">
+                <p class="text-sm text-gray-600 mb-3">{% trans "You haven't translated anything yet." %}</p>
+                <a href="{% url 'home' %}"
+                   class="inline-block px-5 py-2.5 text-sm font-semibold bg-scifi-accent text-scifi-bg rounded-xl hover:bg-scifi-accent/90 transition-all">
+                    {% trans "Start Translating" %}
+                </a>
+            </div>
+        {% endif %}
     </div>
-    {% else %}
-    <div class="bg-scifi-card border border-scifi-border rounded-2xl p-8 text-center">
-        <p class="text-sm text-gray-600 mb-3">{% trans "You haven't translated anything yet." %}</p>
-        <a href="{% url 'home' %}" class="inline-block px-5 py-2.5 text-sm font-semibold bg-scifi-accent text-scifi-bg rounded-xl hover:bg-scifi-accent/90 transition-all">
-            {% trans "Start Translating" %}
-        </a>
-    </div>
-    {% endif %}
-</div>
 {% endblock %}
