@@ -9,7 +9,7 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: PYTHON_VERSION
-        value: 3.11.6
+        value: "3.11"
       - key: RENDER
         value: "true"
       - key: DATABASE_URL
