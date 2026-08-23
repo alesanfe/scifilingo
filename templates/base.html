@@ -6,24 +6,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Título predeterminado{% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"> <!-- Enlaza tu archivo CSS personalizado aquí -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- Agrega Bootstrap para estilos adicionales -->
-    <style>
-
-    </style>
+    <title>{% block title %}SciFiLingo{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 </head>
 
 <body>
     <header class="bg-dark text-light py-4">
         <div class="container">
-            <div class="row">
+            <div class="row align-items-center">
                 <div class="col">
-                    <a href="https://acortar.link/2JBRZJ" class="logo-link"><img src="{% static 'img/logo.png' %}" alt="Logo" class="logo">SciFiLingo</a>
+                    <a href="{% url 'home' %}" class="logo-link">
+                        <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo">SciFiLingo
+                    </a>
                 </div>
 
                 <div class="col text-right">
-                    <nav class="navbar navbar-expand-lg navbar-dark">
+                    <nav class="navbar navbar-expand-lg navbar-dark p-0">
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
@@ -57,6 +56,17 @@
 
     <main class="py-5">
         <div class="container">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endfor %}
+            {% endif %}
+
             {% block content %}
             {% endblock %}
         </div>
@@ -64,15 +74,12 @@
 
     <footer class="bg-dark text-light py-3 mt-auto">
         <div class="container">
-            <p class="text-center">&copy; {{ year|date:"Y" }} SciFiLingo</p>
+            <p class="text-center mb-0">&copy; {% now "Y" %} SciFiLingo</p>
         </div>
     </footer>
 
-    <!-- Agrega enlaces a scripts de JavaScript si es necesario -->
-
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
-
-
-

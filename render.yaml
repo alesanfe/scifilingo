@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: scifilingo
+    runtime: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn translator_project.wsgi:application"
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.11.6
+      - key: FUNTRANSLATIONS_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: scifilingo-db
+          property: connectionString
+
+databases:
+  - name: scifilingo-db
+    plan: free

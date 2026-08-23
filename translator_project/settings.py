@@ -22,16 +22,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-development-only-key-change-me')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'RENDER' not in os.environ
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+# URL to redirect to when login is required
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
 
 
 # Application definition
@@ -44,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'traductor_app',
+    'user_management',
 ]
 
 MIDDLEWARE = [
@@ -149,4 +155,28 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Define la ubicación de los archivos estáticos recopilados
+
+# SciFiLingo settings
+# Available fictional languages for translation (slugs used by funtranslations API)
+SCIFILINGO_LANGUAGES = [
+    ('sith', 'Sith'),
+    ('yoda', 'Yoda'),
+    ('klingon', 'Klingon'),
+    ('enderman', 'Enderman'),
+    ('dothraki', 'Dothraki'),
+    ('emoji', 'Emoji'),
+    ('quenya', 'Quenya (Elvish)'),
+    ('groot', 'Groot'),
+    ('draconic', 'Draconic'),
+    ('pirate', 'Pirate'),
+    ('minion', 'Minion'),
+    ('ferb-latin', 'Ferb Latin'),
+    ('pig-latin', 'Pig Latin'),
+    ('vulcan', 'Vulcan'),
+    ('morse', 'Morse Code'),
+]
+
+# Optional: funtranslations API key for higher rate limits (paid plans).
+# Free tier allows 60 calls/day, 5 calls/hour without a key.
+FUNTRANSLATIONS_API_KEY = os.environ.get('FUNTRANSLATIONS_API_KEY', '')
 

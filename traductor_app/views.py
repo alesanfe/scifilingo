@@ -1,45 +1,55 @@
-# Create your views here.
-from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
 
-from .api_client import APIFunTranslation  # Importa la función de traducción
+from .api_client import APIFunTranslation, RateLimitError, TranslationError
 from .models import Translation
 
 
+@login_required
 def home(request):
+    from django.conf import settings
+    languages = getattr(settings, 'SCIFILINGO_LANGUAGES', [])
+
     if request.method == 'POST':
-        # Obtener el texto ingresado por el usuario
-        text_to_translate = request.POST.get('text_to_translate', '')
-        # Obtener el idioma de destino seleccionado
-        target_language = request.POST.get('target_language', '')
-        # Realizar la traducción
+        text_to_translate = request.POST.get('text_to_translate', '').strip()
+        target_language = request.POST.get('target_language', '').strip()
+
+        if not text_to_translate:
+            messages.error(request, "Please enter some text to translate.")
+            return render(request, 'translation/home.html', {'languages': languages})
+
         translator = APIFunTranslation()
-        translated_text = translator.translate(target_language, text_to_translate)
-        # Redirigir a la vista de resultados
+        try:
+            translated_text = translator.translate(target_language, text_to_translate)
+        except RateLimitError as exc:
+            messages.error(request, str(exc))
+            return render(request, 'translation/home.html', {'languages': languages})
+        except TranslationError as exc:
+            messages.error(request, str(exc))
+            return render(request, 'translation/home.html', {'languages': languages})
+
         translation = Translation(
             user=request.user,
             original_text=text_to_translate,
             translated_text=translated_text,
-            target_language=target_language
+            target_language=target_language,
         )
-
         translation.save()
 
-        return results(request, translated_text)
+        return render(request, 'translation/results.html', {'translated_text': translated_text})
 
-    return render(request, 'translation/home.html', {'languages': ['sith', 'yoda', 'klingon', 'enderman', 'dothraki', 'emoji', 'quenya', 'groot', 'draconic', ]})
-
-
-def results(request, translated_text):
-    return render(request, 'translation/results.html', {'translated_text': translated_text})
+    return render(request, 'translation/home.html', {'languages': languages})
 
 
+@login_required
 def translation_history(request):
-    # Lógica para obtener el historial de traducciones del usuario
-    translations = Translation.objects.filter(user=request.user).order_by('-translation_date')
+    translations = Translation.objects.filter(user=request.user)
     return render(request, 'translation/history.html', {'translations': translations})
 
 
+@login_required
 def translation_details(request, translation_id):
-    # Lógica para obtener los detalles de una traducción específica
-    translation = Translation.objects.get(id=translation_id)
+    # Filter by user to prevent IDOR (users can only see their own translations)
+    translation = get_object_or_404(Translation, id=translation_id, user=request.user)
     return render(request, 'translation/details.html', {'translation': translation})

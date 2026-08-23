@@ -1,11 +1,9 @@
-from django.urls import path, include
+from django.urls import path
 
-from traductor_app.views import home, results, translation_history, translation_details
-from django.contrib.auth import views as auth_views
+from traductor_app.views import home, translation_history, translation_details
 
 urlpatterns = [
     path('', home, name='home'),
-    path('results/', results, name='results'),
     path('history/', translation_history, name='history'),
     path('details/<int:translation_id>/', translation_details, name='details'),
 ]

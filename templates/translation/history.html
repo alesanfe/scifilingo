@@ -1,36 +1,40 @@
 {% extends "base.html" %}
 
-{% block title %}Historial de Traducciones{% endblock %}
+{% block title %}Translation History{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col">
-        <h2 class="mb-4">Historial de Traducciones</h2>
+        <h2 class="mb-4">Translation History</h2>
+        {% if translations %}
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Texto Original</th>
-                    <th scope="col">Idioma de Destino</th>
-                    <th scope="col">Texto Traducido</th>
+                    <th scope="col">Original Text</th>
+                    <th scope="col">Target Language</th>
+                    <th scope="col">Date</th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
                 {% for translation in translations %}
                 <tr>
                     <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ translation.original_text }}</td>
-                    <td>{{ translation.target_language }}</td>
+                    <td>{{ translation.original_text|truncatewords:10 }}</td>
+                    <td>{{ translation.target_language|upper }}</td>
+                    <td>{{ translation.translation_date|date:"Y-m-d H:i" }}</td>
                     <td>
-                        <!-- Enlace a la página de detalles con el ID de traducción como parámetro -->
-                        <a href="{% url 'details' translation.id %}" class="btn btn-sm btn-primary">Detalles</a>
+                        <a href="{% url 'details' translation.id %}" class="btn btn-sm btn-primary">Details</a>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        <a href="{% url 'home' %}" class="btn btn-primary">Volver al Inicio</a>
+        {% else %}
+        <div class="alert alert-info">You have no translations yet. <a href="{% url 'home' %}">Translate something!</a></div>
+        {% endif %}
+        <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
     </div>
 </div>
 {% endblock %}
-
