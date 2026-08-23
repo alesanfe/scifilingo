@@ -106,3 +106,26 @@ jobs:
 
       - name: Run linter via Makefile
         run: make lint
+
+  # Deploy to Render only on main branch, after all CI checks pass
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [lint, test, makefile]
+    if: github.ref == 'refs/heads/main' && github.repository == 'alesanfe/scifilingo'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Trigger Render deploy hook
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
+            echo "RENDER_DEPLOY_HOOK_URL secret is not set. Skipping deploy."
+            echo "To enable auto-deploy, add it in:"
+            echo "  GitHub repo > Settings > Secrets and variables > Actions > New repository secret"
+            exit 1
+          fi
+          echo "Triggering Render deploy hook..."
+          curl -sS -X POST "$RENDER_DEPLOY_HOOK_URL" -H "Accept: application/json"
+          echo "Deploy triggered. Check progress at https://dashboard.render.com"
