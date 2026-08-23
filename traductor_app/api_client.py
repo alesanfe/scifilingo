@@ -11,11 +11,10 @@ The flow:
 
 import json
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from urllib.parse import unquote
 
 import requests
-from django.conf import settings
 from django.core.cache import cache
 
 
@@ -111,7 +110,6 @@ class APIFunTranslation:
 
     base_url: str = "https://funtranslations.com"
     timeout: float = 15.0
-    api_key: str = field(default_factory=lambda: getattr(settings, "FUNTRANSLATIONS_API_KEY", ""))
     _session: requests.Session | None = None
     _csrf: str = ""
     _xsrf: str = ""

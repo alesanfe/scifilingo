@@ -101,7 +101,6 @@ Copy `.env.example` to `.env` and adjust as needed:
 | `SECRET_KEY` | Production | dev key | Django secret key. Auto-generated on Render. |
 | `DEBUG` | No | `True` (dev) | Django debug mode. `False` when `RENDER` is set. |
 | `ALLOWED_HOSTS` | No | `localhost,...` | Comma-separated list of allowed hosts. |
-| `FUNTRANSLATIONS_API_KEY` | No | empty | Optional API key for higher rate limits (paid plan). |
 | `RENDER_EXTERNAL_HOSTNAME` | Auto | empty | Set automatically by Render. |
 | `DATABASE_URL` | Production | SQLite | PostgreSQL connection string. Auto-set on Render. |
 | `CACHE_BACKEND` | No | `LocMemCache` | Cache backend for ratelimit. Use `RedisCache` in prod. |
@@ -174,9 +173,8 @@ python manage.py check --deploy
 1. Fork/push this repo to GitHub.
 2. Go to [Render](https://render.com) and create a new Web Service from the repo.
 3. The included `render.yaml` defines the service and a PostgreSQL database.
-4. Set the `FUNTRANSLATIONS_API_KEY` env var if you have a paid plan.
-5. For production caching, set `CACHE_BACKEND=django.core.cache.backends.redis.RedisCache` and `CACHE_LOCATION=redis://...`.
-6. Render runs `build.sh` (collectstatic + migrate) and starts Gunicorn automatically.
+4. For production caching, set `CACHE_BACKEND=django.core.cache.backends.redis.RedisCache` and `CACHE_LOCATION=redis://...`.
+5. Render runs `build.sh` (pip install + collectstatic + migrate) and starts Gunicorn automatically.
 
 ### Docker
 

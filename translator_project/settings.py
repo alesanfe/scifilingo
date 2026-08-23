@@ -374,10 +374,6 @@ SCIFILINGO_LANGUAGES = [
     ),
 ]
 
-# Optional: funtranslations API key for higher rate limits (paid plans).
-# Free tier allows 60 calls/day, 5 calls/hour without a key.
-FUNTRANSLATIONS_API_KEY = env("FUNTRANSLATIONS_API_KEY", default="")
-
 # Internationalization
 LANGUAGE_CODE = "en"
 LANGUAGES = [
