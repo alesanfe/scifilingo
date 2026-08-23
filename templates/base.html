@@ -122,6 +122,18 @@
                         {% trans "Login" %}
                     </a>
                     {% endif %}
+                    <!-- Language selector -->
+                    <div class="flex items-center gap-0.5 ml-1 pl-2 border-l border-scifi-border">
+                        {% get_current_language as LANGUAGE_CODE %}
+                        <a href="{% url 'set_language' 'en' %}"
+                           class="px-2 py-1 text-xs font-semibold rounded {% if LANGUAGE_CODE == 'en' %}text-scifi-accent bg-scifi-accent/10{% else %}text-gray-500 hover:text-gray-300{% endif %} transition-all">
+                            EN
+                        </a>
+                        <a href="{% url 'set_language' 'es' %}"
+                           class="px-2 py-1 text-xs font-semibold rounded {% if LANGUAGE_CODE == 'es' %}text-scifi-accent bg-scifi-accent/10{% else %}text-gray-500 hover:text-gray-300{% endif %} transition-all">
+                            ES
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

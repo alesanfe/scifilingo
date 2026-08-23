@@ -1,6 +1,7 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Sign Up &middot; SciFiLingo{% endblock %}
+{% block title %}{% trans "Sign Up" %} &middot; SciFiLingo{% endblock %}
 
 {% block content %}
 <div class="flex justify-center pt-8">
@@ -8,8 +9,8 @@
         <div class="bg-scifi-card border border-scifi-border rounded-2xl shadow-2xl shadow-black/40 p-8 animate-slide-up">
             <!-- Header -->
             <div class="text-center mb-8">
-                <h1 class="text-2xl font-bold text-white">Create account</h1>
-                <p class="text-sm text-gray-500 mt-1">Start translating to fictional languages</p>
+                <h1 class="text-2xl font-bold text-white">{% trans "Create account" %}</h1>
+                <p class="text-sm text-gray-500 mt-1">{% trans "Start translating to fictional languages" %}</p>
             </div>
 
             <form method="post" id="signup-form" class="space-y-5" novalidate>
@@ -101,8 +102,8 @@
 
             <div class="mt-6 pt-6 border-t border-scifi-border text-center">
                 <p class="text-sm text-gray-500">
-                    Already have an account?
-                    <a href="{% url 'login' %}" class="text-scifi-accent hover:underline font-medium">Login</a>
+                    {% trans "Already have an account?" %}
+                    <a href="{% url 'login' %}" class="text-scifi-accent hover:underline font-medium">{% trans "Login" %}</a>
                 </p>
             </div>
         </div>

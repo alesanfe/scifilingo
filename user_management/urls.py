@@ -5,6 +5,7 @@ from user_management.views import (
     login_view,
     logout_view,
     profile_view,
+    set_language_view,
     signin_view,
 )
 
@@ -14,4 +15,5 @@ urlpatterns = [
     path("signin/", signin_view, name="signin"),
     path("profile/", profile_view, name="profile"),
     path("change-password/", change_password_view, name="change_password"),
+    path("set-language/<str:lang_code>/", set_language_view, name="set_language"),
 ]

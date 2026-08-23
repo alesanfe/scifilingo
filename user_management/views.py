@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, UserCreationForm
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
+from django.utils.translation import activate
 
 from traductor_app.models import Translation
 
@@ -90,3 +91,16 @@ def change_password_view(request: HttpRequest) -> HttpResponse:
     else:
         form = PasswordChangeForm(user=request.user)
     return render(request, "registration/change_password.html", {"form": form})
+
+
+def set_language_view(request: HttpRequest, lang_code: str) -> HttpResponse:
+    """Set the user's language preference and redirect back."""
+    from django.conf import settings
+
+    supported = {code for code, _name in settings.LANGUAGES}
+    if lang_code in supported:
+        activate(lang_code)
+        response = redirect(request.META.get("HTTP_REFERER", "home"))
+        response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang_code, max_age=60 * 60 * 24 * 365)
+        return response
+    return redirect("home")

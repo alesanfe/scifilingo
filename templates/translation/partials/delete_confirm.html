@@ -1,3 +1,4 @@
+{% load i18n %}
 <div id="delete-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4" onclick="if(event.target===this) this.remove()">
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
     <div class="relative bg-scifi-card border border-scifi-border rounded-2xl shadow-2xl p-6 max-w-md w-full animate-slide-up">
@@ -8,12 +9,12 @@
                 </svg>
             </div>
             <div>
-                <h3 class="text-lg font-semibold text-white">Delete Translation</h3>
-                <p class="text-sm text-gray-500 mt-0.5">This action cannot be undone.</p>
+                <h3 class="text-lg font-semibold text-white">{% trans "Delete Translation" %}</h3>
+                <p class="text-sm text-gray-500 mt-0.5">{% trans "This action cannot be undone." %}</p>
             </div>
         </div>
         <div class="bg-scifi-surface rounded-xl p-3 mb-4">
-            <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Original</p>
+            <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">{% trans "Original" %}</p>
             <p class="text-sm text-gray-300 truncate">{{ translation.original_text|truncatewords:8 }}</p>
             <p class="text-xs text-scifi-accent uppercase tracking-wide mt-2 mb-1">{{ language_label }}</p>
             <p class="text-sm text-gray-300 truncate">{{ translation.translated_text|truncatewords:8 }}</p>
@@ -22,12 +23,12 @@
             <form method="post" hx-post="{% url 'delete' translation.id %}" hx-target="#row-{{ translation.id }}" hx-swap="outerHTML" class="flex-1">
                 {% csrf_token %}
                 <button type="submit" class="w-full py-2.5 px-4 bg-red-500/90 text-white font-semibold rounded-xl hover:bg-red-500 transition-all">
-                    Yes, delete
+                    {% trans "Yes, delete" %}
                 </button>
             </form>
             <button onclick="document.getElementById('delete-modal').remove()"
                     class="flex-1 py-2.5 px-4 bg-scifi-surface border border-scifi-border text-gray-300 font-semibold rounded-xl hover:bg-scifi-border transition-all">
-                Cancel
+                {% trans "Cancel" %}
             </button>
         </div>
     </div>

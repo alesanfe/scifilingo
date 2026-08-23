@@ -206,3 +206,60 @@ msgstr "No se pudo conectar con funtranslations.com."
 
 msgid "Rate limit exceeded. Please try again later."
 msgstr "Límite de peticiones excedido. Inténtalo más tarde."
+
+msgid "Result"
+msgstr "Resultado"
+
+msgid "Original"
+msgstr "Original"
+
+msgid "Translation failed"
+msgstr "Error de traducción"
+
+msgid "Create account"
+msgstr "Crear cuenta"
+
+msgid "Start translating to fictional languages"
+msgstr "Empieza a traducir a idiomas ficticios"
+
+msgid "Already have an account?"
+msgstr "¿Ya tienes cuenta?"
+
+msgid "Are you sure you want to log out?"
+msgstr "¿Seguro que quieres cerrar sesión?"
+
+msgid "Yes, log out"
+msgstr "Sí, cerrar sesión"
+
+msgid "Back to Profile"
+msgstr "Volver al perfil"
+
+msgid "Page Not Found"
+msgstr "Página no encontrada"
+
+msgid "The page you're looking for doesn't exist or has been moved."
+msgstr "La página que buscas no existe o ha sido movida."
+
+msgid "Go Home"
+msgstr "Ir al inicio"
+
+msgid "Forbidden"
+msgstr "Prohibido"
+
+msgid "You don't have permission to access this page."
+msgstr "No tienes permiso para acceder a esta página."
+
+msgid "Server Error"
+msgstr "Error del servidor"
+
+msgid "Something went wrong on our end. Please try again later."
+msgstr "Algo ha fallado por nuestra parte. Inténtalo más tarde."
+
+msgid "Fictional Language Translator"
+msgstr "Traductor de idiomas ficticios"
+
+msgid "Translate any text into 55+ sci-fi and fantasy languages"
+msgstr "Traduce cualquier texto a más de 55 idiomas de ciencia ficción y fantasía"
+
+msgid "Language"
+msgstr "Idioma"

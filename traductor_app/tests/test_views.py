@@ -95,6 +95,40 @@ class TestHomeView:
 
 
 @pytest.mark.django_db
+class TestRateLimiting:
+    @patch("traductor_app.services.APIFunTranslation")
+    def test_rate_limit_blocks_after_threshold(self, mock_translator_class, auth_client):
+        """After 10 POSTs in a minute, the 11th should be rate-limited."""
+        from django.core.cache import cache
+
+        cache.clear()
+        mock_translator = MagicMock()
+        mock_translator.translate.return_value = "translated"
+        mock_translator_class.return_value = mock_translator
+
+        # First 10 requests should succeed
+        for i in range(10):
+            response = auth_client.post(
+                reverse("home"),
+                {"text_to_translate": f"text {i}", "target_language": "yoda"},
+            )
+            assert response.status_code == 200
+            assert not getattr(response.wsgi_request, "limited", False)
+
+        # 11th request should be limited
+        response = auth_client.post(
+            reverse("home"),
+            {"text_to_translate": "too many", "target_language": "yoda"},
+        )
+        assert response.status_code == 200
+        assert getattr(response.wsgi_request, "limited", False)
+        # The error message should mention rate limiting
+        assert b"too fast" in response.content or b"translating" in response.content
+
+        cache.clear()
+
+
+@pytest.mark.django_db
 class TestHistoryView:
     def test_history_requires_login(self, client):
         response = client.get(reverse("history"))

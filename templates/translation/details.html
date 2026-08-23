@@ -1,27 +1,28 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Details &middot; SciFiLingo{% endblock %}
+{% block title %}{% trans "Details" %} &middot; SciFiLingo{% endblock %}
 
 {% block content %}
 <div class="flex justify-center">
     <div class="w-full max-w-2xl">
         <div class="flex items-center justify-between mb-6">
-            <h1 class="text-2xl font-bold text-white">Translation Details</h1>
+            <h1 class="text-2xl font-bold text-white">{% trans "Translation Details" %}</h1>
             <a href="{% url 'history' %}" class="text-sm text-gray-400 hover:text-scifi-accent transition-colors">
-                &larr; Back to History
+                &larr; {% trans "Back to History" %}
             </a>
         </div>
 
         <div class="space-y-4 animate-slide-up">
             <!-- Original text -->
             <div class="bg-scifi-card border border-scifi-border rounded-xl p-5">
-                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Original Text</h3>
+                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">{% trans "Original Text" %}</h3>
                 <p class="text-gray-200">{{ translation.original_text }}</p>
             </div>
 
             <!-- Language -->
             <div class="bg-scifi-card border border-scifi-border rounded-xl p-5">
-                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Target Language</h3>
+                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">{% trans "Target Language" %}</h3>
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-scifi-accent/10 text-scifi-accent border border-scifi-accent/20">
                     {{ language_label }}
                 </span>
@@ -29,13 +30,13 @@
 
             <!-- Translated text -->
             <div class="bg-scifi-surface border border-scifi-accent/30 rounded-xl p-5 shadow-lg shadow-scifi-accent/5">
-                <h3 class="text-xs font-semibold text-scifi-accent uppercase tracking-wider mb-2">Translated Text</h3>
+                <h3 class="text-xs font-semibold text-scifi-accent uppercase tracking-wider mb-2">{% trans "Translated Text" %}</h3>
                 <p class="text-lg text-white leading-relaxed">{{ translation.translated_text }}</p>
             </div>
 
             <!-- Date -->
             <div class="bg-scifi-card border border-scifi-border rounded-xl p-5">
-                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Date</h3>
+                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">{% trans "Date" %}</h3>
                 <p class="text-sm text-gray-400">{{ translation.translation_date|date:"Y-m-d H:i" }}</p>
             </div>
 
@@ -43,11 +44,11 @@
             <div class="flex gap-3 pt-2">
                 <button onclick="copyText(this, '{{ translation.translated_text|escapejs }}')"
                         class="px-4 py-2.5 text-sm font-medium bg-scifi-surface border border-scifi-border text-gray-300 rounded-xl hover:bg-scifi-border transition-all">
-                    <span class="copy-label">Copy Translation</span>
+                    <span class="copy-label">{% trans "Copy Translation" %}</span>
                 </button>
                 <button hx-get="{% url 'delete' translation.id %}" hx-target="body" hx-swap="beforeend"
                         class="px-4 py-2.5 text-sm font-medium bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl hover:bg-red-500/20 transition-all">
-                    Delete
+                    {% trans "Delete" %}
                 </button>
             </div>
         </div>
@@ -58,7 +59,7 @@ function copyText(btn, text) {
     navigator.clipboard.writeText(text).then(function() {
         var label = btn.querySelector('.copy-label');
         var original = label.textContent;
-        label.textContent = 'Copied!';
+        label.textContent = '{% trans "Copied!" %}';
         setTimeout(function() { label.textContent = original; }, 2000);
     });
 }

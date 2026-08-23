@@ -1,6 +1,7 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Result &middot; SciFiLingo{% endblock %}
+{% block title %}{% trans "Result" %} &middot; SciFiLingo{% endblock %}
 
 {% block content %}
 <div class="flex justify-center">
@@ -14,10 +15,10 @@
             <p class="text-lg text-white leading-relaxed mb-4">{{ translated_text }}</p>
             <div class="flex gap-2">
                 <a href="{% url 'home' %}" class="px-4 py-2 text-sm font-medium bg-scifi-accent text-scifi-bg rounded-lg hover:bg-scifi-accent/90 transition-all">
-                    Translate Another
+                    {% trans "Translate Another" %}
                 </a>
                 <a href="{% url 'history' %}" class="px-4 py-2 text-sm font-medium bg-scifi-surface border border-scifi-border text-gray-300 rounded-lg hover:bg-scifi-border transition-all">
-                    View History
+                    {% trans "View History" %}
                 </a>
             </div>
         </div>
