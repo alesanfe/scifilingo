@@ -1,6 +1,7 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Login &middot; SciFiLingo{% endblock %}
+{% block title %}{% trans "Login" %} &middot; SciFiLingo{% endblock %}
 
 {% block content %}
 <div class="flex justify-center pt-8">
@@ -9,44 +10,132 @@
         <div class="bg-scifi-card border border-scifi-border rounded-2xl shadow-2xl shadow-black/40 p-8 animate-slide-up">
             <!-- Header -->
             <div class="text-center mb-8">
-                <h1 class="text-2xl font-bold text-white">Welcome back</h1>
-                <p class="text-sm text-gray-500 mt-1">Sign in to your account</p>
+                <h1 class="text-2xl font-bold text-white">{% trans "Welcome back" %}</h1>
+                <p class="text-sm text-gray-500 mt-1">{% trans "Sign in to your account" %}</p>
             </div>
 
-            <form method="post" class="space-y-5">
+            <form method="post" id="login-form" class="space-y-5">
                 {% csrf_token %}
                 {% for field in form %}
                 <div>
                     <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-400 mb-1.5">
                         {{ field.label }}
                     </label>
-                    <input type="{{ field.field.widget.input_type }}"
-                           name="{{ field.name }}"
-                           id="{{ field.id_for_label }}"
-                           value="{{ field.value|default:'' }}"
-                           autocomplete="{{ field.name }}"
-                           class="w-full px-4 py-3 bg-scifi-surface border border-scifi-border rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-scifi-accent focus:ring-2 focus:ring-scifi-accent/20 transition-all"
-                           placeholder="{{ field.label }}">
+                    <div class="relative">
+                        <input type="{{ field.field.widget.input_type }}"
+                               name="{{ field.name }}"
+                               id="{{ field.id_for_label }}"
+                               value="{{ field.value|default:'' }}"
+                               autocomplete="{{ field.name }}"
+                               class="w-full px-4 py-3 bg-scifi-surface border border-scifi-border rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-scifi-accent focus:ring-2 focus:ring-scifi-accent/20 transition-all pr-12"
+                               placeholder="{{ field.label }}"
+                               data-field="{{ field.name }}">
+                        {% if field.field.widget.input_type == "password" %}
+                        <button type="button" onclick="togglePassword(this)"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-300 transition-colors">
+                            <svg class="w-5 h-5 eye-open" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                            <svg class="w-5 h-5 eye-closed hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                            </svg>
+                        </button>
+                        {% endif %}
+                    </div>
+                    <p id="error-{{ field.name }}" class="mt-1.5 text-sm text-red-400 hidden"></p>
                     {% if field.errors %}
                     <p class="mt-1.5 text-sm text-red-400">{{ field.errors|join:", " }}</p>
                     {% endif %}
                 </div>
                 {% endfor %}
 
-                <button type="submit"
-                        class="w-full py-3 px-4 bg-scifi-accent text-scifi-bg font-semibold rounded-xl hover:bg-scifi-accent/90 focus:outline-none focus:ring-2 focus:ring-scifi-accent/40 transition-all shadow-lg shadow-scifi-accent/20">
-                    Sign In
+                <button type="submit" id="submit-btn"
+                        class="w-full py-3 px-4 bg-scifi-accent text-scifi-bg font-semibold rounded-xl hover:bg-scifi-accent/90 focus:outline-none focus:ring-2 focus:ring-scifi-accent/40 transition-all shadow-lg shadow-scifi-accent/20 disabled:opacity-50 disabled:cursor-not-allowed">
+                    {% trans "Sign In" %}
                 </button>
             </form>
 
             <!-- Divider -->
             <div class="mt-6 pt-6 border-t border-scifi-border text-center">
                 <p class="text-sm text-gray-500">
-                    Don't have an account?
-                    <a href="{% url 'signin' %}" class="text-scifi-accent hover:underline font-medium">Sign up</a>
+                    {% trans "Don't have an account?" %}
+                    <a href="{% url 'signin' %}" class="text-scifi-accent hover:underline font-medium">{% trans "Sign up" %}</a>
                 </p>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+function togglePassword(btn) {
+    var input = btn.parentElement.querySelector('input');
+    var open = btn.querySelector('.eye-open');
+    var closed = btn.querySelector('.eye-closed');
+    if (input.type === 'password') {
+        input.type = 'text';
+        open.classList.add('hidden');
+        closed.classList.remove('hidden');
+    } else {
+        input.type = 'password';
+        open.classList.remove('hidden');
+        closed.classList.add('hidden');
+    }
+}
+
+(function() {
+    var form = document.getElementById('login-form');
+    var submitBtn = document.getElementById('submit-btn');
+    var usernameInput = form.querySelector('[data-field="username"]');
+    var passwordInput = form.querySelector('[data-field="password"]');
+
+    function showError(field, msg) {
+        var el = document.getElementById('error-' + field);
+        if (el) {
+            el.textContent = msg;
+            el.classList.remove('hidden');
+        }
+    }
+
+    function clearError(field) {
+        var el = document.getElementById('error-' + field);
+        if (el) {
+            el.textContent = '';
+            el.classList.add('hidden');
+        }
+    }
+
+    function validate() {
+        var valid = true;
+        var username = usernameInput.value.trim();
+        var password = passwordInput.value;
+
+        if (!username) {
+            showError('username', 'Username is required.');
+            valid = false;
+        } else {
+            clearError('username');
+        }
+
+        if (!password) {
+            showError('password', 'Password is required.');
+            valid = false;
+        } else {
+            clearError('password');
+        }
+
+        submitBtn.disabled = !valid;
+        return valid;
+    }
+
+    usernameInput.addEventListener('input', validate);
+    passwordInput.addEventListener('input', validate);
+    form.addEventListener('submit', function(e) {
+        if (!validate()) {
+            e.preventDefault();
+        }
+    });
+    validate();
+})();
+</script>
 {% endblock %}

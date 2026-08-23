@@ -221,6 +221,44 @@ class TestDeleteView:
 
 
 @pytest.mark.django_db
+class TestExportView:
+    def test_export_requires_login(self, client):
+        response = client.get(reverse("export_history"))
+        assert response.status_code == 302
+
+    def test_export_csv(self, auth_client, user):
+        Translation.objects.create(user=user, original_text="hello", translated_text="world", target_language="yoda")
+        response = auth_client.get(reverse("export_history") + "?format=csv")
+        assert response.status_code == 200
+        assert "text/csv" in response["Content-Type"]
+        assert b"hello" in response.content
+        assert b"world" in response.content
+
+    def test_export_json(self, auth_client, user):
+        Translation.objects.create(user=user, original_text="hello", translated_text="world", target_language="yoda")
+        response = auth_client.get(reverse("export_history") + "?format=json")
+        assert response.status_code == 200
+        assert "application/json" in response["Content-Type"]
+        import json
+
+        data = json.loads(response.content)
+        assert len(data) == 1
+        assert data[0]["original_text"] == "hello"
+
+    def test_export_only_own_translations(self, auth_client, user, other_user):
+        Translation.objects.create(user=user, original_text="mine", translated_text="a", target_language="yoda")
+        Translation.objects.create(
+            user=other_user, original_text="not mine", translated_text="b", target_language="yoda"
+        )
+        response = auth_client.get(reverse("export_history") + "?format=json")
+        import json
+
+        data = json.loads(response.content)
+        assert len(data) == 1
+        assert data[0]["original_text"] == "mine"
+
+
+@pytest.mark.django_db
 class TestRootRedirect:
     def test_root_redirects_to_translation(self, client):
         response = client.get("/")

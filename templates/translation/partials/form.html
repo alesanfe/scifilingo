@@ -1,10 +1,11 @@
+{% load i18n %}
 <div id="translation-form-wrapper">
     <form hx-post="{% url 'home' %}" hx-target="#translation-form-wrapper" hx-swap="outerHTML"
           hx-indicator="#submit-spinner" class="space-y-5">
         {% csrf_token %}
         <div>
             <label for="{{ form.text_to_translate.id_for_label }}" class="block text-sm font-medium text-gray-400 mb-1.5">
-                Text to translate
+                {% trans "Text to translate" %}
             </label>
             {{ form.text_to_translate }}
             <div class="flex justify-between items-center mt-1.5">
@@ -18,7 +19,7 @@
         </div>
         <div>
             <label for="{{ form.target_language.id_for_label }}" class="block text-sm font-medium text-gray-400 mb-1.5">
-                Target language
+                {% trans "Target language" %}
             </label>
             {{ form.target_language }}
             {% if form.target_language.errors %}
@@ -31,7 +32,7 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
             </svg>
-            Translate
+            {% trans "Translate" %}
         </button>
     </form>
 </div>

@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_ratelimit",
     "traductor_app",
     "user_management",
 ]
@@ -64,6 +65,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -335,3 +337,32 @@ SCIFILINGO_LANGUAGES = [
 # Optional: funtranslations API key for higher rate limits (paid plans).
 # Free tier allows 60 calls/day, 5 calls/hour without a key.
 FUNTRANSLATIONS_API_KEY = env("FUNTRANSLATIONS_API_KEY", default="")
+
+# Internationalization
+LANGUAGE_CODE = "en"
+LANGUAGES = [
+    ("en", "English"),
+    ("es", "Español"),
+]
+LOCALE_PATHS = [BASE_DIR / "locale"]
+USE_I18N = True
+USE_TZ = True
+
+# Cache: django-ratelimit requires a shared cache backend.
+# In production, use Redis or memcached via env var CACHE_URL.
+# LocMemCache is fine for development (single process).
+CACHES = {
+    "default": {
+        "BACKEND": env(
+            "CACHE_BACKEND",
+            default="django.core.cache.backends.locmem.LocMemCache",
+        ),
+        "LOCATION": env("CACHE_LOCATION", default="scifilingo-dev"),
+    }
+}
+# Silence ratelimit warning about LocMemCache in development
+RATELIMIT_ENABLE = env.bool("RATELIMIT_ENABLE", default=True)
+
+# SILENCED_SYSTEM_CHECKS: silence ratelimit E003/W001 in dev (LocMemCache)
+# In production with Redis/memcached these won't appear
+SILENCED_SYSTEM_CHECKS = env.list("SILENCED_SYSTEM_CHECKS", default=["django_ratelimit.E003", "django_ratelimit.W001"])

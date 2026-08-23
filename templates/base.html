@@ -1,4 +1,4 @@
-{% load static %}
+{% load static i18n %}
 
 <!DOCTYPE html>
 <html lang="en" class="h-full">
@@ -102,21 +102,24 @@
                 <!-- Nav links -->
                 <div class="flex items-center gap-1 sm:gap-2">
                     <a href="{% url 'home' %}" class="px-3 py-2 text-sm font-medium text-gray-400 hover:text-scifi-accent rounded-lg hover:bg-white/5 transition-all">
-                        Translate
+                        {% trans "Translate" %}
                     </a>
                     {% if user.is_authenticated %}
                     <a href="{% url 'history' %}" class="px-3 py-2 text-sm font-medium text-gray-400 hover:text-scifi-accent rounded-lg hover:bg-white/5 transition-all">
-                        History
+                        {% trans "History" %}
+                    </a>
+                    <a href="{% url 'profile' %}" class="px-3 py-2 text-sm font-medium text-gray-400 hover:text-scifi-accent rounded-lg hover:bg-white/5 transition-all">
+                        {% trans "Profile" %}
                     </a>
                     <a href="{% url 'logout' %}" class="px-3 py-2 text-sm font-medium text-gray-400 hover:text-red-400 rounded-lg hover:bg-white/5 transition-all">
-                        Logout
+                        {% trans "Logout" %}
                     </a>
                     {% else %}
                     <a href="{% url 'signin' %}" class="px-3 py-2 text-sm font-medium text-gray-400 hover:text-scifi-accent rounded-lg hover:bg-white/5 transition-all">
-                        Sign Up
+                        {% trans "Sign Up" %}
                     </a>
                     <a href="{% url 'login' %}" class="px-4 py-2 text-sm font-semibold text-scifi-bg bg-scifi-accent hover:bg-scifi-accent/90 rounded-lg transition-all shadow-lg shadow-scifi-accent/20">
-                        Login
+                        {% trans "Login" %}
                     </a>
                     {% endif %}
                 </div>

@@ -1,14 +1,25 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}History &middot; SciFiLingo{% endblock %}
+{% block title %}{% trans "History" %} &middot; SciFiLingo{% endblock %}
 
 {% block content %}
 <div class="max-w-4xl mx-auto">
     <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-bold text-white">Translation History</h1>
-        <a href="{% url 'home' %}" class="px-4 py-2 text-sm font-medium bg-scifi-accent text-scifi-bg rounded-lg hover:bg-scifi-accent/90 transition-all">
-            New Translation
-        </a>
+        <h1 class="text-2xl font-bold text-white">{% trans "Translation History" %}</h1>
+        <div class="flex items-center gap-2">
+            {% if page_obj %}
+            <a href="{% url 'export_history' %}?format=csv" class="px-3 py-2 text-sm font-medium bg-scifi-surface border border-scifi-border text-gray-300 rounded-lg hover:bg-scifi-border transition-all">
+                {% trans "Export CSV" %}
+            </a>
+            <a href="{% url 'export_history' %}?format=json" class="px-3 py-2 text-sm font-medium bg-scifi-surface border border-scifi-border text-gray-300 rounded-lg hover:bg-scifi-border transition-all">
+                {% trans "Export JSON" %}
+            </a>
+            {% endif %}
+            <a href="{% url 'home' %}" class="px-4 py-2 text-sm font-medium bg-scifi-accent text-scifi-bg rounded-lg hover:bg-scifi-accent/90 transition-all">
+                {% trans "New Translation" %}
+            </a>
+        </div>
     </div>
 
     <!-- Search & filter -->
@@ -16,22 +27,22 @@
         <div class="flex flex-col sm:flex-row gap-3">
             <div class="flex-1">
                 <input type="text" name="q" value="{{ search_query }}"
-                       placeholder="Search by text..."
+                       placeholder="{% trans 'Search by text...' %}"
                        class="w-full px-4 py-2.5 bg-scifi-surface border border-scifi-border rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-scifi-accent focus:ring-2 focus:ring-scifi-accent/20 transition-all text-sm">
             </div>
             <div class="sm:w-56">
                 <select name="lang" class="w-full px-4 py-2.5 bg-scifi-surface border border-scifi-border rounded-xl text-white focus:outline-none focus:border-scifi-accent focus:ring-2 focus:ring-scifi-accent/20 transition-all text-sm">
-                    <option value="">All languages</option>
+                    <option value="">{% trans "All languages" %}</option>
                     {% for slug, label in language_groups %}
                     <option value="{{ slug }}" {% if selected_language == slug %}selected{% endif %}>{{ label }}</option>
                     {% endfor %}
                 </select>
             </div>
             <button type="submit" class="px-5 py-2.5 text-sm font-medium bg-scifi-surface border border-scifi-border text-gray-300 rounded-xl hover:bg-scifi-border transition-all">
-                Search
+                {% trans "Search" %}
             </button>
             {% if search_query or selected_language %}
-            <a href="{% url 'history' %}" class="px-4 py-2.5 text-sm font-medium text-gray-500 hover:text-gray-300 transition-all">Clear</a>
+            <a href="{% url 'history' %}" class="px-4 py-2.5 text-sm font-medium text-gray-500 hover:text-gray-300 transition-all">{% trans "Clear" %}</a>
             {% endif %}
         </div>
     </form>
@@ -43,9 +54,9 @@
             <thead>
                 <tr class="border-b border-scifi-border">
                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">#</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Original Text</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Language</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">{% trans "Original Text" %}</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">{% trans "Language" %}</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">{% trans "Date" %}</th>
                     <th class="px-4 py-3"></th>
                 </tr>
             </thead>
@@ -62,13 +73,13 @@
                     <td class="px-4 py-3 text-sm text-gray-500">{{ translation.translation_date|date:"Y-m-d H:i" }}</td>
                     <td class="px-4 py-3 text-right whitespace-nowrap">
                         <a href="{% url 'details' translation.id %}" class="text-sm text-scifi-accent hover:underline font-medium">
-                            Details &rarr;
+                            {% trans "Details" %} &rarr;
                         </a>
                         <button hx-get="{% url 'delete' translation.id %}"
                                 hx-target="body"
                                 hx-swap="beforeend"
                                 class="ml-3 text-sm text-red-400/60 hover:text-red-400 font-medium opacity-0 group-hover:opacity-100 transition-all">
-                            Delete
+                            {% trans "Delete" %}
                         </button>
                     </td>
                 </tr>
@@ -107,14 +118,14 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
         </svg>
         {% if search_query or selected_language %}
-        <h3 class="text-lg font-medium text-gray-400 mb-2">No results found</h3>
-        <p class="text-sm text-gray-600 mb-4">Try different search terms or clear the filters.</p>
+        <h3 class="text-lg font-medium text-gray-400 mb-2">{% trans "No results found" %}</h3>
+        <p class="text-sm text-gray-600 mb-4">{% trans "Try different search terms or clear the filters." %}</p>
         {% else %}
-        <h3 class="text-lg font-medium text-gray-400 mb-2">No translations yet</h3>
-        <p class="text-sm text-gray-600 mb-4">Start by translating your first text into a fictional language.</p>
+        <h3 class="text-lg font-medium text-gray-400 mb-2">{% trans "No translations yet" %}</h3>
+        <p class="text-sm text-gray-600 mb-4">{% trans "Start by translating your first text into a fictional language." %}</p>
         {% endif %}
         <a href="{% url 'home' %}" class="inline-block px-5 py-2.5 text-sm font-semibold bg-scifi-accent text-scifi-bg rounded-xl hover:bg-scifi-accent/90 transition-all">
-            Translate Something
+            {% trans "Translate Something" %}
         </a>
     </div>
     {% endif %}

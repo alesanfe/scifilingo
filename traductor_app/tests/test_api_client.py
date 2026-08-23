@@ -183,3 +183,36 @@ class TestAPIFunTranslation:
 
         assert LANGUAGE_SLUG_MAP["yoda"] == "yodish"
         assert LANGUAGE_SLUG_MAP["pirate"] == "pirate-speak"
+
+    @patch("traductor_app.api_client.requests.Session")
+    def test_snapshot_cached_avoids_second_get(self, mock_session_class):
+        """Second translate call for same language should not GET the page again."""
+        from django.core.cache import cache
+
+        cache.clear()
+
+        mock_session = MagicMock()
+        mock_session_class.return_value = mock_session
+        mock_session.cookies = {"XSRF-TOKEN": "testxsrf"}
+
+        get_resp = make_get_response()
+        mock_session.get.return_value = get_resp
+
+        post_resp = make_post_response(
+            json_data={"components": [{"snapshot": SAMPLE_RESPONSE_SNAPSHOT, "effects": {"returns": [None]}}]}
+        )
+        mock_session.post.return_value = post_resp
+
+        client = APIFunTranslation()
+
+        # First call: should GET page + POST
+        client.translate("yoda", "Hello world")
+        assert mock_session.get.call_count == 1
+        assert mock_session.post.call_count == 1
+
+        # Second call: snapshot cached, should only POST (no GET)
+        client.translate("yoda", "Goodbye world")
+        assert mock_session.get.call_count == 1  # Still 1, no new GET
+        assert mock_session.post.call_count == 2
+
+        cache.clear()

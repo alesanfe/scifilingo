@@ -1,0 +1,208 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: SciFiLingo\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-23 00:00+0000\n"
+"PO-Revision-Date: 2026-08-23 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Translate"
+msgstr "Traducir"
+
+msgid "History"
+msgstr "Historial"
+
+msgid "Profile"
+msgstr "Perfil"
+
+msgid "Logout"
+msgstr "Cerrar sesión"
+
+msgid "Login"
+msgstr "Iniciar sesión"
+
+msgid "Sign Up"
+msgstr "Registrarse"
+
+msgid "Sign In"
+msgstr "Acceder"
+
+msgid "Welcome back"
+msgstr "Bienvenido de nuevo"
+
+msgid "Sign in to your account"
+msgstr "Inicia sesión en tu cuenta"
+
+msgid "Username"
+msgstr "Nombre de usuario"
+
+msgid "Password"
+msgstr "Contraseña"
+
+msgid "Username is required."
+msgstr "El nombre de usuario es obligatorio."
+
+msgid "Password is required."
+msgstr "La contraseña es obligatoria."
+
+msgid "Don't have an account?"
+msgstr "¿No tienes cuenta?"
+
+msgid "Sign up"
+msgstr "Regístrate"
+
+msgid "Text to translate"
+msgstr "Texto a traducir"
+
+msgid "Target language"
+msgstr "Idioma destino"
+
+msgid "Please enter some text to translate."
+msgstr "Por favor, introduce algún texto para traducir."
+
+msgid "Translation History"
+msgstr "Historial de traducciones"
+
+msgid "New Translation"
+msgstr "Nueva traducción"
+
+msgid "Search by text..."
+msgstr "Buscar por texto..."
+
+msgid "All languages"
+msgstr "Todos los idiomas"
+
+msgid "Search"
+msgstr "Buscar"
+
+msgid "Clear"
+msgstr "Limpiar"
+
+msgid "No results found"
+msgstr "No se encontraron resultados"
+
+msgid "Try different search terms or clear the filters."
+msgstr "Prueba con otros términos o limpia los filtros."
+
+msgid "No translations yet"
+msgstr "Aún no hay traducciones"
+
+msgid "Start by translating your first text into a fictional language."
+msgstr "Empieza traduciendo tu primer texto a un idioma ficticio."
+
+msgid "Translate Something"
+msgstr "Traducir algo"
+
+msgid "Details"
+msgstr "Detalles"
+
+msgid "Translation Details"
+msgstr "Detalles de traducción"
+
+msgid "Back to History"
+msgstr "Volver al historial"
+
+msgid "Original Text"
+msgstr "Texto original"
+
+msgid "Target Language"
+msgstr "Idioma destino"
+
+msgid "Translated Text"
+msgstr "Texto traducido"
+
+msgid "Date"
+msgstr "Fecha"
+
+msgid "Delete"
+msgstr "Eliminar"
+
+msgid "Delete Translation"
+msgstr "Eliminar traducción"
+
+msgid "This action cannot be undone."
+msgstr "Esta acción no se puede deshacer."
+
+msgid "Yes, delete"
+msgstr "Sí, eliminar"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Copy"
+msgstr "Copiar"
+
+msgid "Copied!"
+msgstr "¡Copiado!"
+
+msgid "Copy Translation"
+msgstr "Copiar traducción"
+
+msgid "Translate Another"
+msgstr "Traducir otro"
+
+msgid "View History"
+msgstr "Ver historial"
+
+msgid "Export CSV"
+msgstr "Exportar CSV"
+
+msgid "Export JSON"
+msgstr "Exportar JSON"
+
+msgid "My Profile"
+msgstr "Mi perfil"
+
+msgid "Change Password"
+msgstr "Cambiar contraseña"
+
+msgid "Member since"
+msgstr "Miembro desde"
+
+msgid "Total Translations"
+msgstr "Traducciones totales"
+
+msgid "Favorite Language"
+msgstr "Idioma favorito"
+
+msgid "Recent Translations"
+msgstr "Traducciones recientes"
+
+msgid "View all"
+msgstr "Ver todo"
+
+msgid "You haven't translated anything yet."
+msgstr "Aún no has traducido nada."
+
+msgid "Start Translating"
+msgstr "Empezar a traducir"
+
+msgid "Update Password"
+msgstr "Actualizar contraseña"
+
+msgid "Your password has been changed successfully."
+msgstr "Tu contraseña se ha cambiado correctamente."
+
+msgid "Please correct the errors below."
+msgstr "Por favor, corrige los errores."
+
+msgid "Invalid username or password."
+msgstr "Nombre de usuario o contraseña incorrectos."
+
+msgid "Translation deleted."
+msgstr "Traducción eliminada."
+
+msgid "You're translating too fast. Please wait a moment and try again."
+msgstr "Estás traduciendo demasiado rápido. Espera un momento e inténtalo de nuevo."
+
+msgid "Could not reach funtranslations.com."
+msgstr "No se pudo conectar con funtranslations.com."
+
+msgid "Rate limit exceeded. Please try again later."
+msgstr "Límite de peticiones excedido. Inténtalo más tarde."
