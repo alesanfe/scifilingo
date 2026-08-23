@@ -1,0 +1,10 @@
+<div id="translation-result" class="mt-4">
+    <div class="alert alert-success">
+        <strong>Translated to {{ language_label }}:</strong>
+        <p class="mt-2 mb-0">{{ translated_text }}</p>
+    </div>
+    <div class="mt-2">
+        <a href="{% url 'home' %}" class="btn btn-primary btn-sm">Translate Another</a>
+        <a href="{% url 'history' %}" class="btn btn-secondary btn-sm">View History</a>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+<div id="translation-form-wrapper">
+    <form hx-post="{% url 'home' %}" hx-target="#translation-form-wrapper" hx-swap="outerHTML">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.text_to_translate.id_for_label }}">Text to translate:</label>
+            {{ form.text_to_translate }}
+            {% if form.text_to_translate.errors %}
+            <div class="text-danger small mt-1">{{ form.text_to_translate.errors|join:", " }}</div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.target_language.id_for_label }}">Target language:</label>
+            {{ form.target_language }}
+            {% if form.target_language.errors %}
+            <div class="text-danger small mt-1">{{ form.target_language.errors|join:", " }}</div>
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <span class="htmx-indicator spinner-border spinner-border-sm mr-2" aria-hidden="true"></span>
+            Translate
+        </button>
+    </form>
+</div>

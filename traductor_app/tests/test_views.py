@@ -16,15 +16,16 @@ class TestHomeView:
     def test_home_authenticated_get(self, auth_client):
         response = auth_client.get(reverse("home"))
         assert response.status_code == 200
+        assert "form" in response.context
         assert "languages" in response.context
 
     def test_home_post_empty_text_shows_error(self, auth_client):
         response = auth_client.post(reverse("home"), {"text_to_translate": "", "target_language": "yoda"})
         assert response.status_code == 200
-        messages = list(response.wsgi_request._messages)
-        assert any("enter some text" in str(m) for m in messages)
+        form = response.context["form"]
+        assert form.errors
 
-    @patch("traductor_app.views.APIFunTranslation")
+    @patch("traductor_app.services.APIFunTranslation")
     def test_home_post_success(self, mock_translator_class, auth_client, user):
         mock_translator = MagicMock()
         mock_translator.translate.return_value = "Yoda speak this is"
@@ -39,8 +40,8 @@ class TestHomeView:
         assert response.context["language_label"] == "Yoda"
         assert Translation.objects.filter(user=user).count() == 1
 
-    @patch("traductor_app.views.cache")
-    @patch("traductor_app.views.APIFunTranslation")
+    @patch("traductor_app.services.cache")
+    @patch("traductor_app.services.APIFunTranslation")
     def test_home_post_uses_cache(self, mock_translator_class, mock_cache, auth_client):
         """Translation should be fetched from cache if available (no API call)."""
         mock_cache.get.return_value = "Cached translation"
@@ -52,8 +53,46 @@ class TestHomeView:
             {"text_to_translate": "Hello", "target_language": "yoda"},
         )
         assert response.context["translated_text"] == "Cached translation"
-        # API should not be called when cache hits
         mock_translator.translate.assert_not_called()
+
+    @patch("traductor_app.services.cache")
+    @patch("traductor_app.services.APIFunTranslation")
+    def test_home_post_uses_db_when_not_cached(self, mock_translator_class, mock_cache, auth_client, user):
+        """When cache misses, should check DB before calling API."""
+        # Cache miss
+        mock_cache.get.return_value = None
+        mock_cache.set = MagicMock()
+        mock_translator = MagicMock()
+        mock_translator_class.return_value = mock_translator
+
+        # Pre-existing translation in DB
+        Translation.objects.create(
+            user=user, original_text="Hello", translated_text="DB translation", target_language="yoda"
+        )
+
+        response = auth_client.post(
+            reverse("home"),
+            {"text_to_translate": "Hello", "target_language": "yoda"},
+        )
+        assert response.context["translated_text"] == "DB translation"
+        # API should not be called when DB has the translation
+        mock_translator.translate.assert_not_called()
+
+    def test_home_htmx_request_returns_partial(self, auth_client):
+        """HTMX requests should return the result partial, not full page."""
+        with patch("traductor_app.services.APIFunTranslation") as mock_class:
+            mock_translator = MagicMock()
+            mock_translator.translate.return_value = "Yoda text"
+            mock_class.return_value = mock_translator
+
+            response = auth_client.post(
+                reverse("home"),
+                {"text_to_translate": "Hello", "target_language": "yoda"},
+                HTTP_HX_REQUEST="true",
+            )
+            assert response.status_code == 200
+            # HTMX partial should not extend base.html
+            assert b"<!DOCTYPE html>" not in response.content
 
 
 @pytest.mark.django_db
@@ -110,10 +149,7 @@ class TestDetailsView:
 
     def test_details_own_translation(self, auth_client, user):
         t = Translation.objects.create(
-            user=user,
-            original_text="hello",
-            translated_text="yoda hello",
-            target_language="yoda",
+            user=user, original_text="hello", translated_text="yoda hello", target_language="yoda"
         )
 
         response = auth_client.get(reverse("details", args=[t.id]))

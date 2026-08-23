@@ -1,9 +1,9 @@
 from django.urls import path
 
-from traductor_app.views import home, translation_details, translation_history
+from traductor_app.views import TranslationHistoryView, home, translation_details
 
 urlpatterns = [
     path("", home, name="home"),
-    path("history/", translation_history, name="history"),
+    path("history/", TranslationHistoryView.as_view(), name="history"),
     path("details/<int:translation_id>/", translation_details, name="details"),
 ]
