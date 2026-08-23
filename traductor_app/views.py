@@ -23,13 +23,15 @@ def home(request):
             try:
                 translated_text = service.translate(text, language)
             except Exception as exc:
-                messages.error(request, str(exc))
-                # Re-render with the form and available languages
-                return render(
-                    request,
-                    "translation/home.html",
-                    {"form": form, "languages": _language_choices()},
-                )
+                error_msg = str(exc)
+                if request.headers.get("HX-Request"):
+                    return render(
+                        request,
+                        "translation/partials/error.html",
+                        {"error_message": error_msg},
+                    )
+                messages.error(request, error_msg)
+                return render(request, "translation/home.html", {"form": form})
 
             Translation.objects.create(
                 user=request.user,
@@ -43,26 +45,19 @@ def home(request):
                 "language_label": get_language_label(language),
                 "original_text": text,
             }
-            # HTMX requests get just the result partial
             if request.headers.get("HX-Request"):
                 return render(request, "translation/partials/result.html", context)
             return render(request, "translation/results.html", context)
 
-        # Form invalid — re-render with errors
         if request.headers.get("HX-Request"):
+            errors = "; ".join(f"{f.label}: {', '.join(f.errors)}" for f in form if f.errors)
             return render(
                 request,
-                "translation/partials/form.html",
-                {"form": form, "languages": _language_choices()},
+                "translation/partials/error.html",
+                {"error_message": errors or "Please correct the errors below."},
             )
 
-    return render(request, "translation/home.html", {"form": form, "languages": _language_choices()})
-
-
-def _language_choices():
-    from django.conf import settings
-
-    return settings.SCIFILINGO_LANGUAGES
+    return render(request, "translation/home.html", {"form": form})
 
 
 class TranslationHistoryView(LoginRequiredMixin, ListView):

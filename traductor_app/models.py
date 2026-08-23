@@ -10,7 +10,7 @@ class Translation(models.Model):
     translation_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ["-translation_date"]
+        ordering = ["-translation_date", "-id"]
 
     def __str__(self):
         return f"Translation #{self.id} by {self.user.username}"

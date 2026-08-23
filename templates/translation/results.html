@@ -1,17 +1,26 @@
 {% extends "base.html" %}
 
-{% block title %}Translation Result{% endblock %}
+{% block title %}Result &middot; SciFiLingo{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-6 offset-md-3">
-        <h2 class="mb-4">Translation Result</h2>
-        <div class="alert alert-success">
-            <strong>Translated to {{ language_label }}:</strong>
-            <p class="mt-2 mb-0">{{ translated_text }}</p>
+<div class="flex justify-center">
+    <div class="w-full max-w-2xl">
+        <div class="bg-scifi-surface border border-scifi-accent/30 rounded-xl p-6 shadow-lg shadow-scifi-accent/10 animate-slide-up">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-sm font-semibold text-scifi-accent uppercase tracking-wide">
+                    {{ language_label }}
+                </span>
+            </div>
+            <p class="text-lg text-white leading-relaxed mb-4">{{ translated_text }}</p>
+            <div class="flex gap-2">
+                <a href="{% url 'home' %}" class="px-4 py-2 text-sm font-medium bg-scifi-accent text-scifi-bg rounded-lg hover:bg-scifi-accent/90 transition-all">
+                    Translate Another
+                </a>
+                <a href="{% url 'history' %}" class="px-4 py-2 text-sm font-medium bg-scifi-surface border border-scifi-border text-gray-300 rounded-lg hover:bg-scifi-border transition-all">
+                    View History
+                </a>
+            </div>
         </div>
-        <a href="{% url 'home' %}" class="btn btn-primary">Translate Another</a>
-        <a href="{% url 'history' %}" class="btn btn-secondary">View History</a>
     </div>
 </div>
 {% endblock %}

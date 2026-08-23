@@ -1,86 +1,141 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en" class="h-full">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}SciFiLingo{% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        scifi: {
+                            bg: '#0b0e17',
+                            surface: '#151b2e',
+                            card: '#1a2138',
+                            border: '#2a3454',
+                            accent: '#00d9ff',
+                            'accent-dim': '#0099b8',
+                            purple: '#a855f7',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(15px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px rgba(0,217,255,0.3)' },
+                            '100%': { boxShadow: '0 0 20px rgba(0,217,255,0.5)' },
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- HTMX -->
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+
+    <!-- Custom minimal styles -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 </head>
 
-<body>
-    <header class="bg-dark text-light py-4">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col">
-                    <a href="{% url 'home' %}" class="logo-link">
-                        <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo">SciFiLingo
-                    </a>
-                </div>
+<body class="h-full bg-scifi-bg text-gray-200 font-sans antialiased flex flex-col min-h-screen"
+      style="background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,217,255,0.12), transparent), radial-gradient(ellipse 60% 50% at 80% 100%, rgba(168,85,247,0.10), transparent); background-attachment: fixed;">
 
-                <div class="col text-right">
-                    <nav class="navbar navbar-expand-lg navbar-dark p-0">
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="navbarNav">
-                            <ul class="navbar-nav ml-auto">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'home' %}">Inicio</a>
-                                </li>
-                                {% if user.is_authenticated %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'history' %}">Historial</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'logout' %}">Cerrar Sesión</a>
-                                </li>
-                                {% else %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'signin' %}">Registrarse</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'login' %}">Iniciar Sesión</a>
-                                </li>
-                                {% endif %}
-                            </ul>
-                        </div>
-                    </nav>
+    <!-- Navbar -->
+    <nav class="bg-scifi-surface/80 backdrop-blur-md border-b border-scifi-border sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <a href="{% url 'home' %}" class="flex items-center gap-2 group">
+                    <img src="{% static 'img/logo.png' %}" alt="Logo" class="w-8 h-8 transition-transform group-hover:rotate-[-5deg]">
+                    <span class="text-xl font-bold tracking-tight text-white group-hover:text-scifi-accent transition-colors">
+                        SciFiLingo
+                    </span>
+                </a>
+
+                <!-- Nav links -->
+                <div class="flex items-center gap-1 sm:gap-2">
+                    <a href="{% url 'home' %}" class="px-3 py-2 text-sm font-medium text-gray-400 hover:text-scifi-accent rounded-lg hover:bg-white/5 transition-all">
+                        Translate
+                    </a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'history' %}" class="px-3 py-2 text-sm font-medium text-gray-400 hover:text-scifi-accent rounded-lg hover:bg-white/5 transition-all">
+                        History
+                    </a>
+                    <a href="{% url 'logout' %}" class="px-3 py-2 text-sm font-medium text-gray-400 hover:text-red-400 rounded-lg hover:bg-white/5 transition-all">
+                        Logout
+                    </a>
+                    {% else %}
+                    <a href="{% url 'signin' %}" class="px-3 py-2 text-sm font-medium text-gray-400 hover:text-scifi-accent rounded-lg hover:bg-white/5 transition-all">
+                        Sign Up
+                    </a>
+                    <a href="{% url 'login' %}" class="px-4 py-2 text-sm font-semibold text-scifi-bg bg-scifi-accent hover:bg-scifi-accent/90 rounded-lg transition-all shadow-lg shadow-scifi-accent/20">
+                        Login
+                    </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
-    </header>
+    </nav>
 
-    <main class="py-5">
-        <div class="container">
-            {% if messages %}
-                {% for message in messages %}
-                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                {% endfor %}
-            {% endif %}
-
-            {% block content %}
-            {% endblock %}
+    <!-- Main content -->
+    <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8">
+        {% if messages %}
+        <div class="space-y-2 mb-6">
+            {% for message in messages %}
+            <div class="flex items-center gap-3 px-4 py-3 rounded-xl border
+                {% if message.tags == 'error' %}bg-red-500/10 border-red-500/30 text-red-300
+                {% elif message.tags == 'success' %}bg-scifi-accent/10 border-scifi-accent/30 text-scifi-accent
+                {% elif message.tags == 'warning' %}bg-yellow-500/10 border-yellow-500/30 text-yellow-300
+                {% else %}bg-scifi-purple/10 border-scifi-purple/30 text-purple-300{% endif %}">
+                <span class="flex-1 text-sm">{{ message }}</span>
+                <button onclick="this.parentElement.remove()" class="text-current opacity-60 hover:opacity-100 transition-opacity">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            {% endfor %}
         </div>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
     </main>
 
-    <footer class="bg-dark text-light py-3 mt-auto">
-        <div class="container">
-            <p class="text-center mb-0">&copy; {% now "Y" %} SciFiLingo</p>
+    <!-- Footer -->
+    <footer class="border-t border-scifi-border bg-scifi-surface/50 mt-auto">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+            <p class="text-center text-sm text-gray-500">
+                &copy; {% now "Y" %} SciFiLingo &mdash; Translate to fictional languages
+            </p>
         </div>
     </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

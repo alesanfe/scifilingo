@@ -17,7 +17,6 @@ class TestHomeView:
         response = auth_client.get(reverse("home"))
         assert response.status_code == 200
         assert "form" in response.context
-        assert "languages" in response.context
 
     def test_home_post_empty_text_shows_error(self, auth_client):
         response = auth_client.post(reverse("home"), {"text_to_translate": "", "target_language": "yoda"})
@@ -37,7 +36,7 @@ class TestHomeView:
         )
         assert response.status_code == 200
         assert response.context["translated_text"] == "Yoda speak this is"
-        assert response.context["language_label"] == "Yoda"
+        assert response.context["language_label"] == "Yoda Speak"
         assert Translation.objects.filter(user=user).count() == 1
 
     @patch("traductor_app.services.cache")
@@ -155,7 +154,7 @@ class TestDetailsView:
         response = auth_client.get(reverse("details", args=[t.id]))
         assert response.status_code == 200
         assert response.context["translation"].original_text == "hello"
-        assert response.context["language_label"] == "Yoda"
+        assert response.context["language_label"] == "Yoda Speak"
 
 
 @pytest.mark.django_db

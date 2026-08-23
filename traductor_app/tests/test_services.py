@@ -59,7 +59,7 @@ class TestTranslationService:
 
 class TestGetLanguageLabel:
     def test_known_language(self):
-        assert get_language_label("yoda") == "Yoda"
+        assert get_language_label("yoda") == "Yoda Speak"
 
     def test_unknown_language_returns_slug(self):
         assert get_language_label("unknown") == "unknown"

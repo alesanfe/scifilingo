@@ -59,7 +59,8 @@ class TranslationService:
 
 def get_language_label(slug: str) -> str:
     """Return the human-readable label for a language slug."""
-    for code, label in settings.SCIFILINGO_LANGUAGES:
-        if code == slug:
-            return label
+    for _group_label, languages in settings.SCIFILINGO_LANGUAGES:
+        for code, label in languages:
+            if code == slug:
+                return label
     return slug

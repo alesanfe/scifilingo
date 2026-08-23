@@ -35,6 +35,12 @@ RENDER_EXTERNAL_HOSTNAME = env("RENDER_EXTERNAL_HOSTNAME", default="")
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
+# CSRF trusted origins (needed for browser previews / proxies in development)
+CSRF_TRUSTED_ORIGINS = env.list(
+    "CSRF_TRUSTED_ORIGINS",
+    default=["http://localhost:8000", "http://127.0.0.1:8000"],
+)
+
 # URL to redirect to when login is required
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "home"
@@ -215,23 +221,115 @@ LOGGING = {
 
 
 # SciFiLingo settings
-# Available fictional languages for translation (slugs used by funtranslations API)
+# Available fictional languages grouped by universe/franchise.
+# Each group is (category_label, [(slug, language_label), ...]).
+# Slugs map to funtranslations.com page slugs via LANGUAGE_SLUG_MAP in api_client.py.
 SCIFILINGO_LANGUAGES = [
-    ("sith", "Sith"),
-    ("yoda", "Yoda"),
-    ("klingon", "Klingon"),
-    ("enderman", "Enderman"),
-    ("dothraki", "Dothraki"),
-    ("emoji", "Emoji"),
-    ("quenya", "Quenya (Elvish)"),
-    ("groot", "Groot"),
-    ("draconic", "Draconic"),
-    ("pirate", "Pirate"),
-    ("minion", "Minion"),
-    ("ferb-latin", "Ferb Latin"),
-    ("pig-latin", "Pig Latin"),
-    ("vulcan", "Vulcan"),
-    ("morse", "Morse Code"),
+    (
+        "Tolkien — Lord of the Rings",
+        [
+            ("quenya", "Quenya (High Elvish)"),
+            ("sindarin", "Sindarin (Grey Elvish)"),
+            ("black-speech", "Black Speech"),
+        ],
+    ),
+    (
+        "Star Wars",
+        [
+            ("yoda", "Yoda Speak"),
+            ("sith", "Sith"),
+            ("huttese", "Huttese"),
+            ("mando-a", "Mando'a (Mandalorian)"),
+            ("shyriiwook", "Shyriiwook (Wookiee)"),
+            ("r2d2", "R2-D2"),
+            ("ewokese", "Ewokese"),
+            ("jawaese", "Jawaese"),
+            ("gungan", "Gungan"),
+            ("cheunh", "Cheunh (Chiss)"),
+            ("aqualish", "Aqualish"),
+        ],
+    ),
+    (
+        "Star Trek",
+        [
+            ("klingon", "Klingon"),
+            ("vulcan", "Vulcan"),
+            ("romulan", "Romulan"),
+            ("cardassian", "Cardassian (Kardasi)"),
+            ("tamarian", "Tamarian"),
+        ],
+    ),
+    (
+        "Game of Thrones",
+        [
+            ("dothraki", "Dothraki"),
+            ("valyrian", "Valyrian"),
+            ("asshai", "Asshai'i"),
+            ("skroth", "Skroth (White Walkers)"),
+            ("lhazareen", "Lhazareen"),
+        ],
+    ),
+    (
+        "The Elder Scrolls",
+        [
+            ("dovahzul", "Dovahzul (Dragon Language)"),
+            ("daedric", "Daedric"),
+            ("aldmeris", "Aldmeris"),
+            ("ayleidoon", "Ayleidoon"),
+            ("tamrielic", "Tamrielic"),
+        ],
+    ),
+    (
+        "Dungeons & Dragons",
+        [
+            ("elvish", "Elvish"),
+            ("orcish", "Orcish"),
+            ("draconic", "Draconic"),
+            ("halfling", "Halfling"),
+            ("goblin", "Goblin"),
+        ],
+    ),
+    (
+        "World of Warcraft",
+        [
+            ("darnassian", "Darnassian (Night Elf)"),
+            ("tel-quessir", "Tel'Quessir (Forgotten Realms)"),
+        ],
+    ),
+    (
+        "Harry Potter",
+        [
+            ("parseltongue", "Parseltongue"),
+            ("gobbledegook", "Gobbledegook"),
+            ("mermish", "Mermish"),
+        ],
+    ),
+    (
+        "Other Fictional",
+        [
+            ("kryptonian", "Kryptonian (DC)"),
+            ("navi", "Na'vi (Avatar)"),
+            ("groot", "Groot (Marvel)"),
+            ("wakandan", "Wakandan (Marvel)"),
+            ("hylian", "Hylian (Zelda)"),
+            ("simlish", "Simlish (The Sims)"),
+            ("rlyehian", "R'lyehian (Lovecraft)"),
+            ("old-tongue", "Old Tongue (Wheel of Time)"),
+            ("predator", "Predator / Yautja"),
+            ("protoss", "Protoss / Khalani (StarCraft)"),
+        ],
+    ),
+    (
+        "Fun & Silly",
+        [
+            ("pirate", "Pirate Speak"),
+            ("minion", "Minionese"),
+            ("ferb-latin", "Ferb Latin"),
+            ("valspeak", "Valspeak (Valley Girl)"),
+            ("lolcat", "LOLCat"),
+            ("chef", "Swedish Chef"),
+        ],
+    ),
 ]
 
 # Optional: funtranslations API key for higher rate limits (paid plans).

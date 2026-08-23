@@ -1,63 +1,86 @@
 {% extends "base.html" %}
 
-{% block title %}Translation History{% endblock %}
+{% block title %}History &middot; SciFiLingo{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col">
-        <h2 class="mb-4">Translation History</h2>
-        {% if page_obj %}
-        <table class="table table-striped">
+<div class="max-w-4xl mx-auto">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold text-white">Translation History</h1>
+        <a href="{% url 'home' %}" class="px-4 py-2 text-sm font-medium bg-scifi-accent text-scifi-bg rounded-lg hover:bg-scifi-accent/90 transition-all">
+            New Translation
+        </a>
+    </div>
+
+    {% if page_obj %}
+    <!-- Table -->
+    <div class="bg-scifi-card border border-scifi-border rounded-2xl overflow-hidden">
+        <table class="w-full">
             <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Original Text</th>
-                    <th scope="col">Target Language</th>
-                    <th scope="col">Date</th>
-                    <th scope="col"></th>
+                <tr class="border-b border-scifi-border">
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">#</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Original Text</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Language</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
+                    <th class="px-4 py-3"></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="divide-y divide-scifi-border">
                 {% for translation in page_obj %}
-                <tr>
-                    <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ translation.original_text|truncatewords:10 }}</td>
-                    <td>{{ translation.target_language|upper }}</td>
-                    <td>{{ translation.translation_date|date:"Y-m-d H:i" }}</td>
-                    <td>
-                        <a href="{% url 'details' translation.id %}" class="btn btn-sm btn-primary">Details</a>
+                <tr class="hover:bg-white/5 transition-colors">
+                    <td class="px-4 py-3 text-sm text-gray-500">{{ forloop.counter }}</td>
+                    <td class="px-4 py-3 text-sm text-gray-300">{{ translation.original_text|truncatewords:10 }}</td>
+                    <td class="px-4 py-3">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-scifi-accent/10 text-scifi-accent border border-scifi-accent/20">
+                            {{ translation.target_language|upper }}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-sm text-gray-500">{{ translation.translation_date|date:"Y-m-d H:i" }}</td>
+                    <td class="px-4 py-3 text-right">
+                        <a href="{% url 'details' translation.id %}" class="text-sm text-scifi-accent hover:underline font-medium">
+                            Details &rarr;
+                        </a>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-
-        {% if page_obj.has_other_pages %}
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-                {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo; Previous</a>
-                </li>
-                {% endif %}
-
-                <li class="page-item active">
-                    <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-                </li>
-
-                {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next &raquo;</a>
-                </li>
-                {% endif %}
-            </ul>
-        </nav>
-        {% endif %}
-
-        {% else %}
-        <div class="alert alert-info">You have no translations yet. <a href="{% url 'home' %}">Translate something!</a></div>
-        {% endif %}
-        <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
     </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <nav class="flex items-center justify-center gap-2 mt-6">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}"
+           class="px-4 py-2 text-sm font-medium bg-scifi-surface border border-scifi-border text-gray-300 rounded-lg hover:bg-scifi-border transition-all">
+            &larr; Previous
+        </a>
+        {% endif %}
+
+        <span class="px-4 py-2 text-sm font-medium text-gray-400">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}"
+           class="px-4 py-2 text-sm font-medium bg-scifi-surface border border-scifi-border text-gray-300 rounded-lg hover:bg-scifi-border transition-all">
+            Next &rarr;
+        </a>
+        {% endif %}
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <!-- Empty state -->
+    <div class="bg-scifi-card border border-scifi-border rounded-2xl p-12 text-center">
+        <svg class="w-16 h-16 mx-auto mb-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+        </svg>
+        <h3 class="text-lg font-medium text-gray-400 mb-2">No translations yet</h3>
+        <p class="text-sm text-gray-600 mb-4">Start by translating your first text into a fictional language.</p>
+        <a href="{% url 'home' %}" class="inline-block px-5 py-2.5 text-sm font-semibold bg-scifi-accent text-scifi-bg rounded-xl hover:bg-scifi-accent/90 transition-all">
+            Translate Something
+        </a>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

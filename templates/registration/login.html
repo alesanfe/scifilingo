@@ -1,27 +1,52 @@
 {% extends "base.html" %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Login &middot; SciFiLingo{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-4 offset-md-4">
-        <h2 class="mb-4">Login</h2>
-        <form method="post">
-            {% csrf_token %}
-            {% for field in form %}
-            <div class="form-group">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
-                {% if field.errors %}
-                <div class="text-danger small">{{ field.errors|join:", " }}</div>
-                {% endif %}
+<div class="flex justify-center pt-8">
+    <div class="w-full max-w-md">
+        <!-- Card -->
+        <div class="bg-scifi-card border border-scifi-border rounded-2xl shadow-2xl shadow-black/40 p-8 animate-slide-up">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-2xl font-bold text-white">Welcome back</h1>
+                <p class="text-sm text-gray-500 mt-1">Sign in to your account</p>
             </div>
-            {% endfor %}
-            <button type="submit" class="btn btn-primary btn-block">Login</button>
-        </form>
-        <p class="mt-3 text-center">
-            Don't have an account? <a href="{% url 'signin' %}">Sign up</a>
-        </p>
+
+            <form method="post" class="space-y-5">
+                {% csrf_token %}
+                {% for field in form %}
+                <div>
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-400 mb-1.5">
+                        {{ field.label }}
+                    </label>
+                    <input type="{{ field.field.widget.input_type }}"
+                           name="{{ field.name }}"
+                           id="{{ field.id_for_label }}"
+                           value="{{ field.value|default:'' }}"
+                           autocomplete="{{ field.name }}"
+                           class="w-full px-4 py-3 bg-scifi-surface border border-scifi-border rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-scifi-accent focus:ring-2 focus:ring-scifi-accent/20 transition-all"
+                           placeholder="{{ field.label }}">
+                    {% if field.errors %}
+                    <p class="mt-1.5 text-sm text-red-400">{{ field.errors|join:", " }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <button type="submit"
+                        class="w-full py-3 px-4 bg-scifi-accent text-scifi-bg font-semibold rounded-xl hover:bg-scifi-accent/90 focus:outline-none focus:ring-2 focus:ring-scifi-accent/40 transition-all shadow-lg shadow-scifi-accent/20">
+                    Sign In
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="mt-6 pt-6 border-t border-scifi-border text-center">
+                <p class="text-sm text-gray-500">
+                    Don't have an account?
+                    <a href="{% url 'signin' %}" class="text-scifi-accent hover:underline font-medium">Sign up</a>
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

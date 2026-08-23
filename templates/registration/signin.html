@@ -1,30 +1,323 @@
 {% extends "base.html" %}
 
-{% block title %}Sign Up{% endblock %}
+{% block title %}Sign Up &middot; SciFiLingo{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-4 offset-md-4">
-        <h2 class="mb-4">Sign Up</h2>
-        <form method="post">
-            {% csrf_token %}
-            {% for field in form %}
-            <div class="form-group">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
-                {% if field.errors %}
-                <div class="text-danger small">{{ field.errors|join:", " }}</div>
-                {% endif %}
-                {% if field.help_text %}
-                <small class="form-text text-muted">{{ field.help_text|safe }}</small>
-                {% endif %}
+<div class="flex justify-center pt-8">
+    <div class="w-full max-w-md">
+        <div class="bg-scifi-card border border-scifi-border rounded-2xl shadow-2xl shadow-black/40 p-8 animate-slide-up">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-2xl font-bold text-white">Create account</h1>
+                <p class="text-sm text-gray-500 mt-1">Start translating to fictional languages</p>
             </div>
-            {% endfor %}
-            <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
-        </form>
-        <p class="mt-3 text-center">
-            Already have an account? <a href="{% url 'login' %}">Login</a>
-        </p>
+
+            <form method="post" id="signup-form" class="space-y-5" novalidate>
+                {% csrf_token %}
+
+                <!-- Username -->
+                <div>
+                    <label for="id_username" class="block text-sm font-medium text-gray-400 mb-1.5">
+                        Username
+                    </label>
+                    <div class="relative">
+                        <input type="text" name="username" id="id_username" value="{{ form.username.value|default:'' }}"
+                               autocomplete="off"
+                               class="w-full px-4 py-3 pr-11 bg-scifi-surface border border-scifi-border rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-scifi-accent/20 transition-all"
+                               placeholder="Choose a username">
+                        <div id="username-icon" class="absolute right-3 top-1/2 -translate-y-1/2 hidden"></div>
+                    </div>
+                    <p id="username-error" class="mt-1.5 text-sm text-red-400 hidden"></p>
+                    <p id="username-hint" class="mt-1.5 text-xs text-gray-600">150 characters or fewer. Letters, digits and @/./+/-/_ only.</p>
+                </div>
+
+                <!-- Password 1 -->
+                <div>
+                    <label for="id_password1" class="block text-sm font-medium text-gray-400 mb-1.5">
+                        Password
+                    </label>
+                    <div class="relative">
+                        <input type="password" name="password1" id="id_password1"
+                               autocomplete="new-password"
+                               class="w-full px-4 py-3 pr-11 bg-scifi-surface border border-scifi-border rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-scifi-accent/20 transition-all"
+                               placeholder="Create a password">
+                        <button type="button" onclick="togglePassword('id_password1', this)"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors">
+                            <svg class="w-5 h-5 eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- Password strength meter -->
+                    <div class="mt-2 flex gap-1.5" id="strength-bars">
+                        <div class="h-1 flex-1 rounded-full bg-scifi-border transition-all duration-300"></div>
+                        <div class="h-1 flex-1 rounded-full bg-scifi-border transition-all duration-300"></div>
+                        <div class="h-1 flex-1 rounded-full bg-scifi-border transition-all duration-300"></div>
+                        <div class="h-1 flex-1 rounded-full bg-scifi-border transition-all duration-300"></div>
+                    </div>
+                    <p id="strength-label" class="mt-1 text-xs text-gray-600">Password strength</p>
+                    <p id="password1-error" class="mt-1.5 text-sm text-red-400 hidden"></p>
+                </div>
+
+                <!-- Password 2 -->
+                <div>
+                    <label for="id_password2" class="block text-sm font-medium text-gray-400 mb-1.5">
+                        Confirm Password
+                    </label>
+                    <div class="relative">
+                        <input type="password" name="password2" id="id_password2"
+                               autocomplete="new-password"
+                               class="w-full px-4 py-3 pr-11 bg-scifi-surface border border-scifi-border rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-scifi-accent/20 transition-all"
+                               placeholder="Repeat your password">
+                        <div id="password2-icon" class="absolute right-3 top-1/2 -translate-y-1/2 hidden"></div>
+                    </div>
+                    <p id="password2-error" class="mt-1.5 text-sm text-red-400 hidden"></p>
+                    <p id="password2-match" class="mt-1.5 text-sm text-green-400 hidden">
+                        <svg class="w-4 h-4 inline -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        Passwords match
+                    </p>
+                </div>
+
+                <!-- Django server-side errors (fallback) -->
+                {% if form.errors %}
+                <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 space-y-1">
+                    {% for field in form %}
+                        {% if field.errors %}
+                        <p class="text-sm text-red-400">{{ field.label }}: {{ field.errors|join:", " }}</p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <button type="submit" id="submit-btn"
+                        class="w-full py-3 px-4 bg-scifi-accent text-scifi-bg font-semibold rounded-xl hover:bg-scifi-accent/90 focus:outline-none focus:ring-2 focus:ring-scifi-accent/40 transition-all shadow-lg shadow-scifi-accent/20 disabled:opacity-40 disabled:cursor-not-allowed"
+                        disabled>
+                    Create Account
+                </button>
+            </form>
+
+            <div class="mt-6 pt-6 border-t border-scifi-border text-center">
+                <p class="text-sm text-gray-500">
+                    Already have an account?
+                    <a href="{% url 'login' %}" class="text-scifi-accent hover:underline font-medium">Login</a>
+                </p>
+            </div>
+        </div>
     </div>
 </div>
+
+<script>
+(function() {
+    const usernameInput = document.getElementById('id_username');
+    const password1Input = document.getElementById('id_password1');
+    const password2Input = document.getElementById('id_password2');
+    const submitBtn = document.getElementById('submit-btn');
+
+    // --- Helpers ---
+    function setError(input, errorEl, iconEl, message) {
+        input.classList.remove('border-scifi-border', 'border-green-500/50');
+        input.classList.add('border-red-500/60');
+        if (errorEl) {
+            errorEl.textContent = message;
+            errorEl.classList.remove('hidden');
+        }
+        if (iconEl) {
+            iconEl.innerHTML = '<svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+            iconEl.classList.remove('hidden');
+        }
+    }
+
+    function setValid(input, errorEl, iconEl, validMessage) {
+        input.classList.remove('border-red-500/60', 'border-scifi-border');
+        input.classList.add('border-green-500/50');
+        if (errorEl) errorEl.classList.add('hidden');
+        if (iconEl) {
+            iconEl.innerHTML = '<svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+            iconEl.classList.remove('hidden');
+        }
+    }
+
+    function setNeutral(input, errorEl, iconEl) {
+        input.classList.remove('border-red-500/60', 'border-green-500/50');
+        input.classList.add('border-scifi-border');
+        if (errorEl) errorEl.classList.add('hidden');
+        if (iconEl) iconEl.classList.add('hidden');
+    }
+
+    // --- Username validation ---
+    let usernameTimer;
+    const usernameError = document.getElementById('username-error');
+    const usernameIcon = document.getElementById('username-icon');
+    const usernameHint = document.getElementById('username-hint');
+
+    function validateUsername() {
+        const val = usernameInput.value.trim();
+        if (val.length === 0) {
+            setNeutral(usernameInput, usernameError, usernameIcon);
+            usernameHint.classList.remove('hidden');
+            return false;
+        }
+        if (val.length > 150) {
+            setError(usernameInput, usernameError, usernameIcon, 'Username is too long (max 150 characters).');
+            usernameHint.classList.add('hidden');
+            return false;
+        }
+        if (!/^[a-zA-Z0-9@.+\-_]+$/.test(val)) {
+            setError(usernameInput, usernameError, usernameIcon, 'Only letters, digits and @/./+/-/_ are allowed.');
+            usernameHint.classList.add('hidden');
+            return false;
+        }
+        setValid(usernameInput, usernameError, usernameIcon);
+        usernameHint.classList.add('hidden');
+        return true;
+    }
+
+    usernameInput.addEventListener('input', function() {
+        clearTimeout(usernameTimer);
+        const val = this.value.trim();
+        if (val.length === 0) {
+            setNeutral(usernameInput, usernameError, usernameIcon);
+            usernameHint.classList.remove('hidden');
+            checkForm();
+            return;
+        }
+        usernameTimer = setTimeout(validateUsername, 300);
+        checkForm();
+    });
+
+    // --- Password strength ---
+    const strengthBars = document.querySelectorAll('#strength-bars > div');
+    const strengthLabel = document.getElementById('strength-label');
+    const password1Error = document.getElementById('password1-error');
+
+    function calculateStrength(pwd) {
+        let score = 0;
+        if (pwd.length >= 8) score++;
+        if (pwd.length >= 12) score++;
+        if (/[a-z]/.test(pwd) && /[A-Z]/.test(pwd)) score++;
+        if (/\d/.test(pwd)) score++;
+        if (/[^a-zA-Z0-9]/.test(pwd)) score++;
+        return Math.min(score, 4);
+    }
+
+    const strengthColors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500'];
+    const strengthLabels = ['Too weak', 'Weak', 'Fair', 'Good', 'Strong'];
+
+    function updateStrength(pwd) {
+        const score = calculateStrength(pwd);
+        strengthBars.forEach((bar, i) => {
+            bar.className = 'h-1 flex-1 rounded-full transition-all duration-300';
+            if (i < score) {
+                bar.classList.add(strengthColors[score - 1]);
+            } else {
+                bar.classList.add('bg-scifi-border');
+            }
+        });
+        if (pwd.length === 0) {
+            strengthLabel.textContent = 'Password strength';
+            strengthLabel.className = 'mt-1 text-xs text-gray-600';
+        } else {
+            strengthLabel.textContent = strengthLabels[score];
+            strengthLabel.className = 'mt-1 text-xs ' + (score <= 1 ? 'text-red-400' : score === 2 ? 'text-orange-400' : score === 3 ? 'text-yellow-400' : 'text-green-400');
+        }
+    }
+
+    function validatePassword1() {
+        const val = password1Input.value;
+        updateStrength(val);
+        if (val.length === 0) {
+            password1Error.classList.add('hidden');
+            password1Input.classList.remove('border-red-500/60', 'border-green-500/50');
+            password1Input.classList.add('border-scifi-border');
+            return false;
+        }
+        if (val.length < 8) {
+            password1Error.textContent = 'Password must be at least 8 characters.';
+            password1Error.classList.remove('hidden');
+            password1Input.classList.remove('border-scifi-border', 'border-green-500/50');
+            password1Input.classList.add('border-red-500/60');
+            return false;
+        }
+        // Common passwords check
+        const common = ['password', '12345678', 'qwerty123', 'abc12345', 'iloveyou'];
+        if (common.includes(val.toLowerCase())) {
+            password1Error.textContent = 'This password is too common.';
+            password1Error.classList.remove('hidden');
+            password1Input.classList.remove('border-scifi-border', 'border-green-500/50');
+            password1Input.classList.add('border-red-500/60');
+            return false;
+        }
+        if (/^\d+$/.test(val)) {
+            password1Error.textContent = 'Password cannot be entirely numeric.';
+            password1Error.classList.remove('hidden');
+            password1Input.classList.remove('border-scifi-border', 'border-green-500/50');
+            password1Input.classList.add('border-red-500/60');
+            return false;
+        }
+        password1Error.classList.add('hidden');
+        password1Input.classList.remove('border-red-500/60', 'border-scifi-border');
+        password1Input.classList.add('border-green-500/50');
+        return true;
+    }
+
+    password1Input.addEventListener('input', function() {
+        validatePassword1();
+        validatePassword2();
+        checkForm();
+    });
+
+    // --- Password match ---
+    const password2Error = document.getElementById('password2-error');
+    const password2Match = document.getElementById('password2-match');
+    const password2Icon = document.getElementById('password2-icon');
+
+    function validatePassword2() {
+        const val = password2Input.value;
+        if (val.length === 0) {
+            setNeutral(password2Input, password2Error, password2Icon);
+            password2Match.classList.add('hidden');
+            return false;
+        }
+        if (val !== password1Input.value) {
+            setError(password2Input, password2Error, password2Icon, 'Passwords do not match.');
+            password2Match.classList.add('hidden');
+            return false;
+        }
+        setValid(password2Input, password2Error, password2Icon);
+        password2Match.classList.remove('hidden');
+        return true;
+    }
+
+    password2Input.addEventListener('input', function() {
+        validatePassword2();
+        checkForm();
+    });
+
+    // --- Form validation gate ---
+    function checkForm() {
+        const valid = validateUsername() && validatePassword1() && validatePassword2();
+        submitBtn.disabled = !valid;
+    }
+
+    // --- Toggle password visibility ---
+    window.togglePassword = function(id, btn) {
+        const input = document.getElementById(id);
+        const icon = btn.querySelector('.eye-icon');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29.7m.53-3.82l-.7-3.29M3 3l3.59 3.59m0 0L9.88 9.88"/>';
+        } else {
+            input.type = 'password';
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>';
+        }
+    };
+
+    // Initial check (in case of re-render after server error)
+    if (usernameInput.value) validateUsername();
+    checkForm();
+})();
+</script>
 {% endblock %}
