@@ -1,16 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %}Resultados de Traducción{% endblock %}
+{% block title %}Translation Result{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-md-6 offset-md-3">
-        <h2 class="mb-4">Resultados de Traducción</h2>
+        <h2 class="mb-4">Translation Result</h2>
         <div class="alert alert-success">
-            <strong>Texto Traducido:</strong>
-            <p>{{ translated_text }}</p>
+            <strong>Translated to {{ language_label }}:</strong>
+            <p class="mt-2 mb-0">{{ translated_text }}</p>
         </div>
-        <a href="{% url 'home' %}" class="btn btn-primary">Volver al Inicio</a>
+        <a href="{% url 'home' %}" class="btn btn-primary">Translate Another</a>
+        <a href="{% url 'history' %}" class="btn btn-secondary">View History</a>
     </div>
 </div>
 {% endblock %}
