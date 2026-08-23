@@ -6,9 +6,11 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 """
 
 import os
+import sys
 from pathlib import Path
 
 import environ
+import structlog
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -56,14 +58,34 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # Third-party production apps
+    "allauth",
+    "allauth.account",
+    "corsheaders",
     "django_ratelimit",
+    "django_structlog",
+    "django_htmx",
+    # Local apps
     "traductor_app",
     "user_management",
 ]
 
+# Dev-only apps and middleware (debug toolbar, extensions, browser reload)
+# Skip during tests to avoid debug_toolbar URL namespace issues
+_DEV_APPS = DEBUG and "pytest" not in sys.modules
+
+if _DEV_APPS:
+    INSTALLED_APPS += [
+        "debug_toolbar",
+        "django_extensions",
+        "django_browser_reload",
+    ]
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django_structlog.middlewares.RequestMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -71,7 +93,21 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
+    "django_htmx.middleware.HtmxMiddleware",
 ]
+
+# Dev-only middleware (debug toolbar + browser reload)
+if _DEV_APPS:
+    MIDDLEWARE = (
+        [
+            "debug_toolbar.middleware.DebugToolbarMiddleware",
+        ]
+        + MIDDLEWARE
+        + [
+            "django_browser_reload.middleware.BrowserReloadMiddleware",
+        ]
+    )
 
 ROOT_URLCONF = "translator_project.urls"
 
@@ -367,3 +403,64 @@ RATELIMIT_ENABLE = env.bool("RATELIMIT_ENABLE", default=True)
 # SILENCED_SYSTEM_CHECKS: silence ratelimit E003/W001 in dev (LocMemCache)
 # In production with Redis/memcached these won't appear
 SILENCED_SYSTEM_CHECKS = env.list("SILENCED_SYSTEM_CHECKS", default=["django_ratelimit.E003", "django_ratelimit.W001"])
+
+
+# =============================================================================
+# django-debug-toolbar (development only)
+# =============================================================================
+if DEBUG:
+    INTERNAL_IPS = ["127.0.0.1", "localhost"]
+    DEBUG_TOOLBAR_CONFIG = {
+        "SHOW_COLLAPSED": True,
+        "SHOW_TOOLBAR_CALLBACK": lambda request: True,  # Show for all users in DEBUG
+    }
+
+
+# =============================================================================
+# django-allauth (authentication)
+# =============================================================================
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+# allauth settings — keep it simple, no email verification for now
+ACCOUNT_LOGIN_METHODS = {"username", "email"}
+ACCOUNT_SIGNUP_FIELDS = ["username*", "email*", "password1*", "password2*"]
+ACCOUNT_EMAIL_VERIFICATION = "none"  # Set to "mandatory" when email is configured
+ACCOUNT_LOGOUT_ON_GET = False
+ACCOUNT_SESSION_COOKIE_AGE = 60 * 60 * 24 * 14  # 14 days
+LOGIN_REDIRECT_URL = "home"
+ACCOUNT_LOGOUT_REDIRECT_URL = "home"
+
+
+# =============================================================================
+# django-cors-headers (for future API)
+# =============================================================================
+CORS_ALLOWED_ORIGINS = env.list(
+    "CORS_ALLOWED_ORIGINS",
+    default=["http://localhost:8000", "http://127.0.0.1:8000"],
+)
+CORS_ALLOW_CREDENTIALS = True
+
+
+# =============================================================================
+# django-structlog (structured logging)
+# =============================================================================
+structlog.configure(
+    processors=[
+        structlog.contextvars.merge_contextvars,
+        structlog.processors.add_log_level,
+        structlog.processors.TimeStamper(fmt="iso"),
+        structlog.dev.ConsoleRenderer(),
+    ],
+    wrapper_class=structlog.make_filtering_bound_logger(0 if DEBUG else 20),
+    cache_logger_on_first_use=True,
+)
+
+# Override LOGGING to use structlog for request lifecycle
+LOGGING["loggers"]["django_structlog"] = {  # type: ignore[index]
+    "handlers": ["console"],
+    "level": "INFO",
+    "propagate": False,
+}

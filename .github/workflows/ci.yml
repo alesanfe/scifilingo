@@ -51,7 +51,6 @@ jobs:
 
       - name: Run deploy checks
         env:
-          # 50+ char key without django-insecure- prefix to pass W009
           SECRET_KEY: ci-test-secret-key-with-50-chars-or-more-for-deploy-check
           RENDER: 'true'
           RENDER_EXTERNAL_HOSTNAME: test.onrender.com
@@ -71,3 +70,39 @@ jobs:
         env:
           SECRET_KEY: ci-test-secret-key-not-for-production
         run: pytest -v
+
+  # Job that uses the Makefile to verify all make targets work
+  makefile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install make (if not available)
+        run: sudo apt-get update && sudo apt-get install -y make
+
+      - name: Install dependencies via Makefile
+        run: make install-dev
+
+      - name: Run system checks via Makefile
+        env:
+          SECRET_KEY: ci-test-secret-key-not-for-production
+        run: make check
+
+      - name: Run migrations via Makefile
+        env:
+          SECRET_KEY: ci-test-secret-key-not-for-production
+        run: make migrate
+
+      - name: Run tests via Makefile
+        env:
+          SECRET_KEY: ci-test-secret-key-not-for-production
+        run: make test
+
+      - name: Run linter via Makefile
+        run: make lint

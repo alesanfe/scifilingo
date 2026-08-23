@@ -1,6 +1,11 @@
 # Development dependencies
 # Install with: pip install -r requirements-dev.txt
 -r requirements.txt
-pytest==8.4.2
+django-debug-toolbar>=7.1.1
+django-extensions>=4.1
+django-htmx>=1.29.0
+django-browser-reload>=1.21.0
+pytest>=9.1.1
 pytest-django==4.14.0
+pytest-env>=1.7.0
 ruff==0.15.22

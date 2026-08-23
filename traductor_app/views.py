@@ -62,13 +62,13 @@ def _handle_translation_post(request: HttpRequest) -> HttpResponse:
         "language_label": get_language_label(language),
         "original_text": text,
     }
-    template = "translation/partials/result.html" if request.headers.get("HX-Request") else "translation/results.html"
+    template = "translation/partials/result.html" if request.htmx else "translation/results.html"  # type: ignore[attr-defined]
     return render(request, template, context)
 
 
 def _render_error(request: HttpRequest, error_msg: str, form: TranslationForm | None = None) -> HttpResponse:
     """Render an error response (HTMX partial or full page with messages)."""
-    if request.headers.get("HX-Request"):
+    if request.htmx:  # type: ignore[attr-defined]
         return render(request, "translation/partials/error.html", {"error_message": error_msg})
     messages.error(request, error_msg)
     return render(request, "translation/home.html", {"form": form or TranslationForm()})
@@ -128,7 +128,7 @@ def translation_delete(request: HttpRequest, translation_id: int) -> HttpRespons
     translation = get_object_or_404(Translation, id=translation_id, user=cast(User, request.user))
     if request.method == "POST":
         translation.delete()
-        if request.headers.get("HX-Request"):
+        if request.htmx:  # type: ignore[attr-defined]
             # Return empty success response — HTMX will remove the row
             return HttpResponse(status=204)
         messages.success(request, _("Translation deleted."))
