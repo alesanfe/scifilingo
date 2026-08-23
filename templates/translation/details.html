@@ -38,7 +38,29 @@
                 <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Date</h3>
                 <p class="text-sm text-gray-400">{{ translation.translation_date|date:"Y-m-d H:i" }}</p>
             </div>
+
+            <!-- Actions -->
+            <div class="flex gap-3 pt-2">
+                <button onclick="copyText(this, '{{ translation.translated_text|escapejs }}')"
+                        class="px-4 py-2.5 text-sm font-medium bg-scifi-surface border border-scifi-border text-gray-300 rounded-xl hover:bg-scifi-border transition-all">
+                    <span class="copy-label">Copy Translation</span>
+                </button>
+                <button hx-get="{% url 'delete' translation.id %}" hx-target="body" hx-swap="beforeend"
+                        class="px-4 py-2.5 text-sm font-medium bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl hover:bg-red-500/20 transition-all">
+                    Delete
+                </button>
+            </div>
         </div>
     </div>
 </div>
+<script>
+function copyText(btn, text) {
+    navigator.clipboard.writeText(text).then(function() {
+        var label = btn.querySelector('.copy-label');
+        var original = label.textContent;
+        label.textContent = 'Copied!';
+        setTimeout(function() { label.textContent = original; }, 2000);
+    });
+}
+</script>
 {% endblock %}

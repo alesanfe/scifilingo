@@ -1,7 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404, render
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView
 
 from .forms import TranslationForm
@@ -10,7 +11,7 @@ from .services import TranslationService, get_language_label
 
 
 @login_required
-def home(request):
+def home(request: HttpRequest) -> HttpResponse:
     form = TranslationForm()
 
     if request.method == "POST":
@@ -66,14 +67,55 @@ class TranslationHistoryView(LoginRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Translation.objects.filter(user=self.request.user)
+        qs = Translation.objects.filter(user=self.request.user)
+        search = self.request.GET.get("q", "").strip()
+        language = self.request.GET.get("lang", "").strip()
+        if search:
+            qs = qs.filter(original_text__icontains=search) | qs.filter(translated_text__icontains=search)
+        if language:
+            qs = qs.filter(target_language=language)
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_query"] = self.request.GET.get("q", "")
+        context["selected_language"] = self.request.GET.get("lang", "")
+        context["language_groups"] = self._get_language_choices()
+        return context
+
+    def _get_language_choices(self):
+        from django.conf import settings
+
+        choices = []
+        for _group_label, languages in settings.SCIFILINGO_LANGUAGES:
+            for slug, label in languages:
+                choices.append((slug, label))
+        return choices
 
 
 @login_required
-def translation_details(request, translation_id):
+def translation_details(request: HttpRequest, translation_id: int) -> HttpResponse:
     translation = get_object_or_404(Translation, id=translation_id, user=request.user)
     return render(
         request,
         "translation/details.html",
+        {"translation": translation, "language_label": get_language_label(translation.target_language)},
+    )
+
+
+@login_required
+def translation_delete(request: HttpRequest, translation_id: int) -> HttpResponse:
+    translation = get_object_or_404(Translation, id=translation_id, user=request.user)
+    if request.method == "POST":
+        translation.delete()
+        if request.headers.get("HX-Request"):
+            # Return empty success response — HTMX will remove the row
+            return HttpResponse(status=204)
+        messages.success(request, "Translation deleted.")
+        return redirect("history")
+    # GET — show confirmation
+    return render(
+        request,
+        "translation/partials/delete_confirm.html",
         {"translation": translation, "language_label": get_language_label(translation.target_language)},
     )

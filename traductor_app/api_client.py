@@ -16,6 +16,7 @@ from urllib.parse import unquote
 
 import requests
 from django.conf import settings
+from django.core.cache import cache
 
 
 class TranslationError(Exception):
@@ -134,8 +135,19 @@ class APIFunTranslation:
     def _get_page(self, language_slug: str) -> str:
         """GET the translator page to extract CSRF token and Livewire snapshot.
 
+        The snapshot + CSRF + endpoint are cached per language for 5 minutes
+        to avoid an extra GET request on every translation.
+
         Returns the raw snapshot string for the translator-converter component.
         """
+        cache_key = f"ft_livewire:{language_slug}"
+        cached = cache.get(cache_key)
+        if cached:
+            self._csrf = cached["csrf"]
+            self._xsrf = cached["xsrf"]
+            self._update_url = cached["update_url"]
+            return cached["snapshot"]
+
         session = self._get_session()
         url = f"{self.base_url}/translate/{language_slug}"
 
@@ -169,6 +181,17 @@ class APIFunTranslation:
             try:
                 snap = json.loads(decoded)
                 if snap.get("memo", {}).get("name") == "translator-converter":
+                    # Cache for 5 minutes — snapshot structure rarely changes
+                    cache.set(
+                        cache_key,
+                        {
+                            "snapshot": decoded,
+                            "csrf": self._csrf,
+                            "xsrf": self._xsrf,
+                            "update_url": self._update_url,
+                        },
+                        timeout=300,
+                    )
                     return decoded  # Return as string
             except json.JSONDecodeError:
                 continue

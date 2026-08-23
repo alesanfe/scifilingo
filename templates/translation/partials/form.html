@@ -7,9 +7,14 @@
                 Text to translate
             </label>
             {{ form.text_to_translate }}
-            {% if form.text_to_translate.errors %}
-            <p class="mt-1.5 text-sm text-red-400">{{ form.text_to_translate.errors|join:", " }}</p>
-            {% endif %}
+            <div class="flex justify-between items-center mt-1.5">
+                {% if form.text_to_translate.errors %}
+                <p class="text-sm text-red-400">{{ form.text_to_translate.errors|join:", " }}</p>
+                {% else %}
+                <span></span>
+                {% endif %}
+                <span id="char-counter" class="text-xs text-gray-600">0 / 1000</span>
+            </div>
         </div>
         <div>
             <label for="{{ form.target_language.id_for_label }}" class="block text-sm font-medium text-gray-400 mb-1.5">
@@ -30,3 +35,24 @@
         </button>
     </form>
 </div>
+<script>
+(function() {
+    var textarea = document.getElementById('{{ form.text_to_translate.id_for_label }}');
+    var counter = document.getElementById('char-counter');
+    if (textarea && counter) {
+        function updateCounter() {
+            var len = textarea.value.length;
+            counter.textContent = len + ' / 1000';
+            if (len > 900) {
+                counter.classList.add('text-amber-400');
+                counter.classList.remove('text-gray-600');
+            } else {
+                counter.classList.remove('text-amber-400');
+                counter.classList.add('text-gray-600');
+            }
+        }
+        textarea.addEventListener('input', updateCounter);
+        updateCounter();
+    }
+})();
+</script>

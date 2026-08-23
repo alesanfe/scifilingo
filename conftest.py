@@ -1,5 +1,14 @@
 import pytest
 from django.contrib.auth.models import User
+from django.core.cache import cache
+
+
+@pytest.fixture(autouse=True)
+def clear_cache():
+    """Clear the cache before each test to prevent cross-test contamination."""
+    cache.clear()
+    yield
+    cache.clear()
 
 
 @pytest.fixture

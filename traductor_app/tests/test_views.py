@@ -129,6 +129,34 @@ class TestHistoryView:
         assert response.context["page_obj"].number == 2
         assert len(response.context["page_obj"]) == 2
 
+    def test_history_search_by_text(self, auth_client, user):
+        """Search should filter translations by original text."""
+        Translation.objects.create(user=user, original_text="hello world", translated_text="a", target_language="yoda")
+        Translation.objects.create(user=user, original_text="goodbye", translated_text="b", target_language="yoda")
+
+        response = auth_client.get(reverse("history") + "?q=hello")
+        translations = list(response.context["page_obj"])
+        assert len(translations) == 1
+        assert translations[0].original_text == "hello world"
+
+    def test_history_filter_by_language(self, auth_client, user):
+        """Language filter should narrow results."""
+        Translation.objects.create(user=user, original_text="a", translated_text="b", target_language="yoda")
+        Translation.objects.create(user=user, original_text="c", translated_text="d", target_language="klingon")
+
+        response = auth_client.get(reverse("history") + "?lang=klingon")
+        translations = list(response.context["page_obj"])
+        assert len(translations) == 1
+        assert translations[0].target_language == "klingon"
+
+    def test_history_search_no_results(self, auth_client, user):
+        """Search with no matches should show empty state."""
+        Translation.objects.create(user=user, original_text="hello", translated_text="b", target_language="yoda")
+
+        response = auth_client.get(reverse("history") + "?q=nonexistent")
+        translations = list(response.context["page_obj"])
+        assert len(translations) == 0
+
 
 @pytest.mark.django_db
 class TestDetailsView:
@@ -155,6 +183,41 @@ class TestDetailsView:
         assert response.status_code == 200
         assert response.context["translation"].original_text == "hello"
         assert response.context["language_label"] == "Yoda Speak"
+
+
+@pytest.mark.django_db
+class TestDeleteView:
+    def test_delete_requires_login(self, client, user):
+        t = Translation.objects.create(user=user, original_text="a", translated_text="b", target_language="yoda")
+        response = client.get(reverse("delete", args=[t.id]))
+        assert response.status_code == 302
+
+    def test_delete_get_shows_confirmation(self, auth_client, user):
+        t = Translation.objects.create(user=user, original_text="a", translated_text="b", target_language="yoda")
+        response = auth_client.get(reverse("delete", args=[t.id]))
+        assert response.status_code == 200
+        assert b"Delete Translation" in response.content
+
+    def test_delete_post_removes_translation(self, auth_client, user):
+        t = Translation.objects.create(user=user, original_text="a", translated_text="b", target_language="yoda")
+        response = auth_client.post(reverse("delete", args=[t.id]))
+        assert response.status_code == 302
+        assert not Translation.objects.filter(id=t.id).exists()
+
+    def test_delete_htmx_returns_204(self, auth_client, user):
+        t = Translation.objects.create(user=user, original_text="a", translated_text="b", target_language="yoda")
+        response = auth_client.post(reverse("delete", args=[t.id]), HTTP_HX_REQUEST="true")
+        assert response.status_code == 204
+        assert not Translation.objects.filter(id=t.id).exists()
+
+    def test_delete_idor_prevented(self, auth_client, other_user):
+        """Cannot delete another user's translation."""
+        t = Translation.objects.create(
+            user=other_user, original_text="secret", translated_text="x", target_language="yoda"
+        )
+        response = auth_client.post(reverse("delete", args=[t.id]))
+        assert response.status_code == 404
+        assert Translation.objects.filter(id=t.id).exists()
 
 
 @pytest.mark.django_db
