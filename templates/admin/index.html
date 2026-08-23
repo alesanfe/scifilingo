@@ -1,0 +1,130 @@
+{% extends "admin/index.html" %}
+{% load i18n %}
+{% block content %}
+    <div id="content-main">
+        {% if scifi_stats %}
+            <!-- SciFiLingo Dashboard Stats -->
+            <div class="scifi-dashboard">
+                <h2 style="color: #00d9ff; margin-bottom: 16px;">SciFiLingo Overview</h2>
+                <div style="display: grid;
+                            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                            gap: 16px;
+                            margin-bottom: 24px">
+                    <div style="background: #1a1f2e;
+                                border: 1px solid #2a3142;
+                                border-radius: 8px;
+                                padding: 16px">
+                        <div style="font-size: 12px;
+                                    color: #888;
+                                    text-transform: uppercase;
+                                    letter-spacing: 1px">Total Users</div>
+                        <div style="font-size: 32px; font-weight: bold; color: #fff;">{{ scifi_stats.total_users }}</div>
+                    </div>
+                    <div style="background: #1a1f2e;
+                                border: 1px solid #2a3142;
+                                border-radius: 8px;
+                                padding: 16px">
+                        <div style="font-size: 12px;
+                                    color: #888;
+                                    text-transform: uppercase;
+                                    letter-spacing: 1px">Total Translations</div>
+                        <div style="font-size: 32px; font-weight: bold; color: #00d9ff;">{{ scifi_stats.total_translations }}</div>
+                    </div>
+                    <div style="background: #1a1f2e;
+                                border: 1px solid #2a3142;
+                                border-radius: 8px;
+                                padding: 16px">
+                        <div style="font-size: 12px;
+                                    color: #888;
+                                    text-transform: uppercase;
+                                    letter-spacing: 1px">Staff Members</div>
+                        <div style="font-size: 32px; font-weight: bold; color: #fff;">{{ scifi_stats.total_staff }}</div>
+                    </div>
+                    <div style="background: #1a1f2e;
+                                border: 1px solid #2a3142;
+                                border-radius: 8px;
+                                padding: 16px">
+                        <div style="font-size: 12px;
+                                    color: #888;
+                                    text-transform: uppercase;
+                                    letter-spacing: 1px">Admin Actions Logged</div>
+                        <div style="font-size: 32px; font-weight: bold; color: #fff;">{{ scifi_stats.total_log_entries }}</div>
+                    </div>
+                </div>
+                <div style="display: grid;
+                            grid-template-columns: 1fr 1fr 1fr;
+                            gap: 16px;
+                            margin-bottom: 24px">
+                    <!-- Recent translations -->
+                    <div style="background: #1a1f2e;
+                                border: 1px solid #2a3142;
+                                border-radius: 8px;
+                                padding: 16px">
+                        <h3 style="color: #00d9ff;
+                                   margin-top: 0;
+                                   margin-bottom: 12px;
+                                   font-size: 14px">Recent Translations</h3>
+                        {% for t in scifi_stats.recent_translations %}
+                            <div style="padding: 8px 0;
+                                        border-bottom: 1px solid #2a3142;
+                                        font-size: 13px">
+                                <div style="color: #ccc;">{{ t.original_text|truncatechars:40 }}</div>
+                                <div style="color: #888; font-size: 11px;">
+                                    {{ t.user.username }} &middot; {{ t.target_language|upper }} &middot; {{ t.translation_date|date:"M d, H:i" }}
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div style="color: #666; font-size: 13px;">No translations yet.</div>
+                        {% endfor %}
+                    </div>
+                    <!-- Top languages -->
+                    <div style="background: #1a1f2e;
+                                border: 1px solid #2a3142;
+                                border-radius: 8px;
+                                padding: 16px">
+                        <h3 style="color: #00d9ff;
+                                   margin-top: 0;
+                                   margin-bottom: 12px;
+                                   font-size: 14px">Top Languages</h3>
+                        {% for lang in scifi_stats.top_languages %}
+                            <div style="display: flex;
+                                        justify-content: space-between;
+                                        padding: 6px 0;
+                                        border-bottom: 1px solid #2a3142;
+                                        font-size: 13px">
+                                <span style="color: #ccc;">{{ lang.target_language|upper }}</span>
+                                <span style="color: #00d9ff; font-weight: bold;">{{ lang.count }}</span>
+                            </div>
+                        {% empty %}
+                            <div style="color: #666; font-size: 13px;">No data yet.</div>
+                        {% endfor %}
+                    </div>
+                    <!-- Top users -->
+                    <div style="background: #1a1f2e;
+                                border: 1px solid #2a3142;
+                                border-radius: 8px;
+                                padding: 16px">
+                        <h3 style="color: #00d9ff;
+                                   margin-top: 0;
+                                   margin-bottom: 12px;
+                                   font-size: 14px">Top Users</h3>
+                        {% for u in scifi_stats.top_users %}
+                            <div style="display: flex;
+                                        justify-content: space-between;
+                                        padding: 6px 0;
+                                        border-bottom: 1px solid #2a3142;
+                                        font-size: 13px">
+                                <span style="color: #ccc;">{{ u.user__username }}</span>
+                                <span style="color: #00d9ff; font-weight: bold;">{{ u.count }}</span>
+                            </div>
+                        {% empty %}
+                            <div style="color: #666; font-size: 13px;">No data yet.</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <!-- Default admin modules -->
+        {{ block.super }}
+    </div>
+{% endblock %}
